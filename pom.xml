@@ -162,15 +162,18 @@
 
         <version.jsonlib>2.4</version.jsonlib>
         <version.servlet>3.0.1</version.servlet>
-        <version.ailbb.ajj>1.8-SNAPSHOT</version.ailbb.ajj>
+        <version.ailbb.ajj>1.9-SNAPSHOT</version.ailbb.ajj>
+        <version.ailbb.alt>1.0-SNAPSHOT</version.ailbb.alt>
 
         <version.commons>3.6</version.commons>
         <version.hadoop>2.6.0-cdh5.13.0</version.hadoop>
+        <version.cloudera.api>5.15.0</version.cloudera.api>
         <version.hbase>1.2.0-cdh5.13.0</version.hbase>
         <version.hive>1.1.0-cdh5.13.0</version.hive>
         <version.hdfs>2.6.0-cdh5.13.0</version.hdfs>
 
         <version.parquet>1.9.0</version.parquet>
+        <version.spring>4.3.9.RELEASE</version.spring>
     </properties>
 
     <dependencies>
@@ -195,6 +198,13 @@
             <groupId>com.ailbb</groupId>
             <artifactId>ajj</artifactId>
             <version>${version.ailbb.ajj}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.ailbb/ajj -->
+        <dependency>
+            <groupId>com.ailbb</groupId>
+            <artifactId>alt</artifactId>
+            <version>${version.ailbb.alt}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -266,11 +276,25 @@
             </exclusions>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.cloudera.api/cloudera-manager-api -->
+        <dependency>
+            <groupId>com.cloudera.api</groupId>
+            <artifactId>cloudera-manager-api</artifactId>
+            <version>${version.cloudera.api}</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.parquet/parquet-avro -->
         <dependency>
             <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-avro</artifactId>
             <version>${version.parquet}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${version.spring}</version>
         </dependency>
 
     </dependencies>

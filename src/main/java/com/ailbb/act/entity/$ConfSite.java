@@ -7,7 +7,7 @@ import org.apache.hadoop.fs.Path;
  * 集群配置文件
  * Created by Wz on 8/10/2018.
  */
-public class ConfSite {
+public class $ConfSite {
     private String coreSite;
     private String hdfsSite;
     private String yarnSite;
@@ -19,7 +19,7 @@ public class ConfSite {
         return coreSite;
     }
 
-    public ConfSite setCoreSite(String coreSite) {
+    public $ConfSite setCoreSite(String coreSite) {
         this.coreSite = coreSite;
         return this;
     }
@@ -28,7 +28,7 @@ public class ConfSite {
         return hdfsSite;
     }
 
-    public ConfSite setHdfsSite(String hdfsSite) {
+    public $ConfSite setHdfsSite(String hdfsSite) {
         this.hdfsSite = hdfsSite;
         return this;
     }
@@ -37,7 +37,7 @@ public class ConfSite {
         return yarnSite;
     }
 
-    public ConfSite setYarnSite(String yarnSite) {
+    public $ConfSite setYarnSite(String yarnSite) {
         this.yarnSite = yarnSite;
         return this;
     }
@@ -46,7 +46,7 @@ public class ConfSite {
         return mapredSite;
     }
 
-    public ConfSite setMapredSite(String mapredSite) {
+    public $ConfSite setMapredSite(String mapredSite) {
         this.mapredSite = mapredSite;
         return this;
     }
@@ -55,7 +55,7 @@ public class ConfSite {
         return hiveSite;
     }
 
-    public ConfSite setHiveSite(String hiveSite) {
+    public $ConfSite setHiveSite(String hiveSite) {
         this.hiveSite = hiveSite;
         return this;
     }
@@ -64,7 +64,7 @@ public class ConfSite {
         return hbaseSite;
     }
 
-    public ConfSite setHbaseSite(String hbaseSite) {
+    public $ConfSite setHbaseSite(String hbaseSite) {
         this.hbaseSite = hbaseSite;
         return this;
     }
