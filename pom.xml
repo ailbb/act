@@ -200,7 +200,7 @@
             <version>${version.ailbb.ajj}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.ailbb/ajj -->
+        <!-- https://mvnrepository.com/artifact/com.ailbb/alt -->
         <dependency>
             <groupId>com.ailbb</groupId>
             <artifactId>alt</artifactId>
