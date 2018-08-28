@@ -8,8 +8,8 @@ Ailbb Cluster Tool.
 <!-- https://mvnrepository.com/artifact/com.ailbb/ajj -->
 <dependency>
     <groupId>com.ailbb</groupId>
-    <artifactId>ajj</artifactId>
-    <version>1.2</version>
+    <artifactId>act</artifactId>
+    <version>1.0</version>
 </dependency>
 ```
 
@@ -18,7 +18,7 @@ Ailbb Cluster Tool.
 <!-- https://mvnrepository.com/artifact/com.ailbb/ajj -->
 <dependency>
     <groupId>com.ailbb</groupId>
-    <artifactId>ajj</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <artifactId>act</artifactId>
+    <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
