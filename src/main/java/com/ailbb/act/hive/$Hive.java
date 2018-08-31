@@ -44,7 +44,7 @@ public class $Hive extends $Hadoop {
      * @param connConfiguration
      * @return
      */
-    public $Hive init($JDBCConnConfiguration connConfiguration) {
+    public $Hive init($JDBCConnConfiguration connConfiguration) throws Exception {
         return init(connConfiguration, null);
     }
 
@@ -53,18 +53,20 @@ public class $Hive extends $Hadoop {
      * @param connConfiguration
      * @return
      */
-    public $Hive init($JDBCConnConfiguration connConfiguration, $Kerberos kerberos) {
+    public $Hive init($JDBCConnConfiguration connConfiguration, $Kerberos kerberos) throws Exception {
         $.info("============== Hive执行初始化 ==============");
         this.setConnConfiguration(connConfiguration);
         this.setKerberos(kerberos);
 
         DriverManagerDataSource dataSource=new DriverManagerDataSource();
         dataSource.setDriverClassName($.lastDef($DRIVER, connConfiguration.getDriver()));
-        dataSource.setUrl(getDataSourceUrl());
+        dataSource.setUrl(setDataSourceUrl(connConfiguration).getUrl());
         dataSource.setUsername(connConfiguration.getUsername());
         dataSource.setPassword(connConfiguration.getPassword());
 
         try {
+            $.info("获取连接：", connConfiguration.getUrl());
+
             return setJdbcTemplate(
                     this.run(new PrivilegedExceptionAction<JdbcTemplate>() {
                         @Override
@@ -73,22 +75,16 @@ public class $Hive extends $Hadoop {
                         }
                     })
             );
-        } catch (IOException e) {
-            $.exception(e);
-        } catch (InterruptedException e) {
-            $.exception(e);
-        } catch (Exception e) {
-            $.exception(e);
+        } finally {
+            $.info("============== Hive初始化结束 ==============");
         }
-
-        return this;
     }
 
     /**
      * 建表
      * @return
      */
-    public $Result createTable(String sql) {
+    public $Result createTable(String sql)  {
         return run(sql);
     }
 
@@ -96,7 +92,7 @@ public class $Hive extends $Hadoop {
      * 删表
      * @return
      */
-    public $Result dropTable(String table) {
+    public $Result dropTable(String table)  {
         return run(String.format("DROP TABLE IF EXISTS %s", table));
     }
 
@@ -104,7 +100,7 @@ public class $Hive extends $Hadoop {
      * 建分区
      * @return
      */
-    public $Result createPartition(String table, String path, LinkedHashMap<String, String> partition) {
+    public $Result createPartition(String table, String path, LinkedHashMap<String, String> partition)  {
         List<Object> params = new ArrayList<>(); // 参数
         List<String> par = new ArrayList<>();
 
@@ -124,7 +120,7 @@ public class $Hive extends $Hadoop {
      * 建分区
      * @return
      */
-    public $Result createPartition(String table, LinkedHashMap<String, String> partition) {
+    public $Result createPartition(String table, LinkedHashMap<String, String> partition)  {
         return createPartition(table, null, partition);
     }
 
@@ -132,7 +128,7 @@ public class $Hive extends $Hadoop {
      * 删分区
      * @return
      */
-    public $Result dropPartition(String table, LinkedHashMap<String, String> partition) {
+    public $Result dropPartition(String table, LinkedHashMap<String, String> partition)  {
         List<Object> params = new ArrayList<>(); // 参数
         List<String> par = new ArrayList<>();
 
@@ -146,42 +142,46 @@ public class $Hive extends $Hadoop {
 
     /**
      * 执行sql
-     * @param sql
-     * @return
+     * @param sql 执行sql
+     * @param list 参数
+     * @return $Result 结构体
      */
-    public $Result run(String sql, List<Object> list) {
+    public $Result run(String sql, List<Object> list)  {
+        $Result rs = $.result();
+
         try {
-            this.run(new PrivilegedExceptionAction<$Hive>() {
+            rs.setData(this.run(new PrivilegedExceptionAction<Integer>() {
                 @Override
-                public $Hive run() throws Exception {
-                    jdbcTemplate.update(sql,  new PreparedStatementSetter() {
+                public Integer run() throws Exception {
+                    $.info("Run Sql: " + sql);
+
+                    return jdbcTemplate.update(sql,  new PreparedStatementSetter() {
                         public void setValues(PreparedStatement ps) throws SQLException {
                             for(int i=0; i<list.size(); i++) ps.setObject(i+1, list.get(i));
                         }
                     });
 
-                    return $.hive;
                 }
-            });
+            }));
         } catch (Exception e) {
-            $.exception(e);
+            rs.addError($.exception(e));
         }
 
-        return $.result();
+        return rs;
     }
 
     /**
      * 执行sql
-     * @param sql
-     * @return
+     * @param sql 执行sql
+     * @return $Result 结构体
      */
-    public $Result run(String sql) {
+    public $Result run(String sql)  {
         return run(sql, new ArrayList<>());
     }
 
     /**
      * get/set方法
-     * @return
+     * @return jdbc连接
      */
     public JdbcTemplate getJdbcTemplate() {
         return jdbcTemplate;
@@ -203,10 +203,10 @@ public class $Hive extends $Hadoop {
 
     /**
      * 获取连接串
-     * @return
+     * @return jdbc连接配置
      */
-    public String getDataSourceUrl() {
-        if(!$.isEmptyOrNull(connConfiguration.getUrl())) return connConfiguration.getUrl();
+    public $JDBCConnConfiguration setDataSourceUrl($JDBCConnConfiguration connConfiguration) {
+        if(!$.isEmptyOrNull(connConfiguration.getUrl())) return connConfiguration;
 
         List<String> list = new ArrayList<>();
         list.add(String.format("jdbc:hive2://%s:%s/%s", $.notNull(connConfiguration.getIp()), $.lastDef($PORT, connConfiguration.getPort()), $.notNull(connConfiguration.getDatabase())) );
@@ -214,6 +214,6 @@ public class $Hive extends $Hadoop {
         if(!$.isEmptyOrNull(this.getKerberos()))
             list.add( String.format("principal=%s/%s@%s", $.notNull(this.getKerberos().getKerberosConnConfiguration().getPrincipalUsr()),  $.notNull(connConfiguration.getIp()), this.getKerberos().getKerberosConnConfiguration().getRealm()) );
 
-        return $.join(list, ";");
+        return connConfiguration.setUrl($.join(list, ";"));
     }
 }

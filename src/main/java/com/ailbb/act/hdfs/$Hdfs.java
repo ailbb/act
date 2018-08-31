@@ -31,99 +31,78 @@ public class $Hdfs extends $Hadoop {
     private FileSystem fileSystem = null; // hbase
     private Configuration conf; // 配置信息
 
-    public $Hdfs init($Kerberos kerberos){
+    public $Hdfs init($Kerberos kerberos) throws Exception {
         this.setKerberos(kerberos);
 
         return init(kerberos.getConf());
     }
 
-    public $Hdfs init(Configuration conf){
+    public $Hdfs init(Configuration conf) throws Exception {
         $.info("============== Hdfs执行初始化 ==============");
         $Hdfs hdfs = this.setConf(conf);
 
-        try {
-            return this.run(new PrivilegedExceptionAction<$Hdfs>() {
-                @Override
-                public $Hdfs run() throws Exception {
-                    hdfs.setFileSystem( FileSystem.get(conf) );
+        return this.run(new PrivilegedExceptionAction<$Hdfs>() {
+            @Override
+            public $Hdfs run() throws Exception {
+                hdfs.setFileSystem( FileSystem.get(conf) );
 
-                    return hdfs;
-                }
-            });
-        } catch (Exception e) {
-            $.exception(e);
-        }
-
-        return this;
+                $.info("============== Hdfs初始化完成 ==============");
+                return hdfs;
+            }
+        });
     }
 
     /**
      * 获取hbase的命名空间
-     * @return
+     * @return 结果集
      */
-    public $Result getNameSpace(String path){
+    public List<String> getNameSpace(String path) throws Exception {
         List<String> list = new ArrayList<>();
 
-        try {
-            this.run(new PrivilegedExceptionAction<List<String>>() {
-                @Override
-                public List<String> run() throws Exception {
-                    FileStatus[] fileStatuses = null;
-                    try {
-                        fileStatuses = getFileSystem().listStatus(new Path(path));
-                        for (FileStatus fileStatus : fileStatuses){
-                            String[] split = fileStatus.getPath().toString().split("/");
-                            list.add(split[split.length-1]);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    return list;
+        this.run(new PrivilegedExceptionAction<List<String>>() {
+            @Override
+            public List<String> run() throws Exception {
+                FileStatus[] fileStatuses = null;
+                fileStatuses = getFileSystem().listStatus(new Path(path));
+                for (FileStatus fileStatus : fileStatuses){
+                    String[] split = fileStatus.getPath().toString().split("/");
+                    list.add(split[split.length-1]);
                 }
-            });
-        } catch (Exception e) {
-            $.exception(e);
-        }
+                return list;
+            }
+        });
 
-        return $.result().setData(list);
+        return list;
     }
 
     /**
      *
      * 删路径
-     * @param path
+     * @param path 路径
      * @param recursive 是否递归删除
-     * @return
+     * @return $Result 结构体
      */
-    public $Result deletePath(String path, boolean recursive) {
-        $Hdfs hdfs = this;
+    public $Result deletePath(String path, boolean recursive)  {
+        $Result rs = $.result();
 
         try {
-            this.run(new PrivilegedExceptionAction<$Hdfs>() {
+            return rs.setData(this.run(new PrivilegedExceptionAction<$Hdfs>() {
                 @Override
                 public $Hdfs run() throws Exception {
-                    try {
-                        fileSystem.delete(new Path(path), recursive);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    return hdfs;
+                    fileSystem.delete(new Path(path), recursive);
+                    return $.hdfs;
                 }
-            });
+            }));
         } catch (Exception e) {
-            $.exception(e);
+            return rs.addError($.exception(e));
         }
-
-        return $.result().setData(hdfs);
     }
 
     /**
      * 删路径
-     * @return
+     * @return $Result 结构体
      */
-    public $Result deletePath(String path) {
+    public $Result deletePath(String path)  {
         return deletePath(path, true);
     }
 

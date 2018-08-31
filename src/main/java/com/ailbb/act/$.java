@@ -29,7 +29,7 @@ public class $ extends com.ailbb.alt.$ {
     /**
      * 获取表对象
      * @param tableName
-     * @return
+     * @return TableName type
      */
     public static TableName toTableName(String tableName) {
         return hbase.toTableName(tableName);

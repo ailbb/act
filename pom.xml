@@ -162,7 +162,7 @@
 
         <version.jsonlib>2.4</version.jsonlib>
         <version.servlet>3.0.1</version.servlet>
-        <version.ailbb.ajj>1.9-SNAPSHOT</version.ailbb.ajj>
+        <version.ailbb.ajj>1.10-SNAPSHOT</version.ailbb.ajj>
         <version.ailbb.alt>1.0-SNAPSHOT</version.ailbb.alt>
 
         <version.commons>3.6</version.commons>
@@ -171,6 +171,7 @@
         <version.hbase>1.2.0-cdh5.13.0</version.hbase>
         <version.hive>1.1.0-cdh5.13.0</version.hive>
         <version.hdfs>2.6.0-cdh5.13.0</version.hdfs>
+        <version.kafka>1.1.0</version.kafka>
 
         <version.parquet>1.9.0</version.parquet>
         <version.spring>4.3.9.RELEASE</version.spring>
@@ -274,6 +275,13 @@
                     <artifactId>jetty-all</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${version.kafka}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.cloudera.api/cloudera-manager-api -->

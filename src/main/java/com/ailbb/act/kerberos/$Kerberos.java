@@ -3,8 +3,8 @@ package com.ailbb.act.kerberos;
 import com.ailbb.act.entity.$KerberosConnConfiguration;
 import com.ailbb.act.entity.$ConfSite;
 import com.ailbb.ajj.$;
+import com.ailbb.ajj.entity.$Result;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.IOException;
@@ -22,7 +22,9 @@ public class $Kerberos {
 
     /**
      * 执行初始化
-     * @return
+     * @param kerberosConnConfiguration kerberos连接配置对象
+     * @param confSite xml路径配置
+     * @return 当前对象
      */
     public $Kerberos init($KerberosConnConfiguration kerberosConnConfiguration, $ConfSite confSite){
         $.info("============== kerberos执行初始化 ==============");
@@ -32,7 +34,7 @@ public class $Kerberos {
 
     /**
      * 验证方法
-     * @return
+     * @return 是否成功
      */
     public boolean valid() {
         try {
@@ -40,26 +42,23 @@ public class $Kerberos {
 
             if(!doCheck()) {
                 doConfig(); // 填写配置信息
-                doLogin(); // 进行登录认证
                 outInfo(); // 打印输出信息
+                if(doLogin().isSuccess()) { // 进行登录认证
+                    $.info("============== kerberos验证成功 ==============");
+                } else {
+                    $.error("============== kerberos验证失败 ==============");
+                }
             }
 
-            $.info("============== kerberos验证成功 ==============");
             return true;
-        } catch (IOException e) {
-            $.error("============== 登录失败 ==============");
-            $.exception(e);
-            return false;
         } catch (Exception e) {
-            $.error("============== kerberos验证失败 ==============");
             $.exception(e);
             return false;
         }
     }
 
     /**
-     *
-     * @return
+     * @return 连接配置
      */
     public Configuration doConfig() {
         conf = confSite.addResource(new Configuration()); // 添加资源文件
@@ -85,28 +84,32 @@ public class $Kerberos {
     }
 
     /**
-     *
-     * @return
+     * @return $Result 结构体
      */
-    public UserGroupInformation doLogin() throws IOException {
-        UserGroupInformation.setConfiguration(conf);
+    public $Result doLogin()  {
+        $Result rs = $.result();
+        try {
+            UserGroupInformation.setConfiguration(conf);
+            this.ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(conf.get("PRINCIPAL"), conf.get("KEYTAB"));
+            rs.addMessage($.error("============== 登录成功 =============="));
+        } catch (IOException e) {
+            rs.addError($.exception(e)).addMessage($.error("============== 登录失败 =============="));
+        }
 
-        ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(conf.get("PRINCIPAL"), conf.get("KEYTAB"));
-
-        return ugi;
+        return rs;
     }
 
     /**
-     *
-     * @return
+     * @return 是否成功
      */
     public boolean doCheck() {
         try {
             ugi.checkTGTAndReloginFromKeytab();
-            return true;
         } catch (Exception e) {
             return false;
         }
+
+        return true;
     }
 
     public <T> T run(PrivilegedExceptionAction<T> action) throws Exception {
@@ -118,7 +121,7 @@ public class $Kerberos {
     }
 
     /**
-     *
+     * 打印验证消息
      */
     private void outInfo(){
         $.info("============== kerberos验证信息 ==============");

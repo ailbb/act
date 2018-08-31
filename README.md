@@ -5,7 +5,7 @@ Ailbb Cluster Tool.
 
 #### Latest Release Version
 ```
-<!-- https://mvnrepository.com/artifact/com.ailbb/ajj -->
+<!-- https://mvnrepository.com/artifact/com.ailbb/act -->
 <dependency>
     <groupId>com.ailbb</groupId>
     <artifactId>act</artifactId>
@@ -15,7 +15,7 @@ Ailbb Cluster Tool.
 
 #### Latest Snapshot Version
 ```
-<!-- https://mvnrepository.com/artifact/com.ailbb/ajj -->
+<!-- https://mvnrepository.com/artifact/com.ailbb/act -->
 <dependency>
     <groupId>com.ailbb</groupId>
     <artifactId>act</artifactId>

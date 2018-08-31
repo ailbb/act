@@ -24,10 +24,9 @@ public class $Hadoop {
 
     /**
      * 运行
-     * @param action
-     * @param <T>
-     * @return
-     * @throws Exception
+     * @param action 接口对象
+     * @param <T> 泛型
+     * @return  结果集
      */
     public <T> T run(PrivilegedExceptionAction<T> action) throws Exception {
         return ($.isEmptyOrNull(kerberos) || ! kerberos.valid()) ? action.run() : kerberos.getUgi().doAs(action);

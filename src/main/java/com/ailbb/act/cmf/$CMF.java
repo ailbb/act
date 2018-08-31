@@ -15,6 +15,7 @@ import net.sf.json.JSONObject;
 import org.apache.cxf.jaxrs.impl.ResponseImpl;
 
 import javax.ws.rs.core.Response;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,19 +29,26 @@ public class $CMF {
 
     /**
      * 初始化方法
-     * @param connConfiguration
-     * @return
+     * @param connConfiguration 连接配置
+     * @return 当前对象
      */
-    public $CMF init($ConnConfiguration connConfiguration){
-        this.setConnConfiguration(connConfiguration).login();
+    public $CMF init($ConnConfiguration connConfiguration) throws Exception {
+        $.info("============== CMF执行初始化 ==============");
+
+        try {
+            this.setConnConfiguration(connConfiguration).login();
+        } finally {
+            $.info("============== CMF初始化完成 ==============");
+        }
+
         return this;
     }
 
     /**
      * 登录cm
-     * @return
+     * @return 结果对象
      */
-    public $Result login(){
+    public $Result login() {
         this.setApiRootResource(
                 new ClouderaManagerClientBuilder()
                         .withHost(connConfiguration.getIp()).withPort(connConfiguration.getPort())
@@ -57,8 +65,8 @@ public class $CMF {
 
     /**
      * 获取响应数据
-     * @param response
-     * @return
+     * @param response 数据对象
+     * @return $Result 结构体
      */
     public $Result getResponseData(Response response){
         JSONObject jsonObject = JSONObject.fromObject(((ResponseImpl) response).readEntity(String.class));
@@ -67,49 +75,57 @@ public class $CMF {
 
     /**
      * 获取数据
-     * @return
+     * @param condition $CmfCondition
+     * @return $Result 结构体
      */
-    public $Result getTimeSeriesResponse($CmfCondition condition) {
-        Date fromDate = $.date.parse(condition.getStarttime());
-        Date toDate = $.date.parse(condition.getEndtime());
-        String fromformat = $.date.format("yyyy-MM-dd'T'HH:mm:ss.SSS'+0800'", fromDate);
-        String toformat = $.date.format("yyyy-MM-dd'T'HH:mm:ss.SSS'+0800'", toDate);
+    public $Result queryTimeSeriesResponse($CmfCondition condition) {
+        $Result rs = $.result();
+        try {
+            Date fromDate = $.date.parse(condition.getStarttime());
+            Date toDate = $.date.parse(condition.getEndtime());
+            String fromformat = $.date.format("yyyy-MM-dd'T'HH:mm:ss.SSS'+0800'", fromDate);
+            String toformat = $.date.format("yyyy-MM-dd'T'HH:mm:ss.SSS'+0800'", toDate);
 
-        long between = (toDate.getTime() - fromDate.getTime());
-        int minutes = (int) (between / (1000 * 60));
-        String desire = "RAW";
+            long between = (toDate.getTime() - fromDate.getTime());
+            int minutes = (int) (between / (1000 * 60));
+            String desire = "RAW";
 
-        if (minutes <= 30) {
-            desire = "RAW";
-        } else if (minutes > 30 && minutes < 300) {
-            desire = "TEN_MINUTELY";
-        } else if (minutes >= 300 && minutes < 1800) {
-            desire = "HOURLY";
-        } else if (minutes >= 1800 && minutes < 10800) {
-            desire = "SIX_HOURLY";
-        } else {
-            desire = "DAILY";
+            if (minutes <= 30) {
+                desire = "RAW";
+            } else if (minutes > 30 && minutes < 300) {
+                desire = "TEN_MINUTELY";
+            } else if (minutes >= 300 && minutes < 1800) {
+                desire = "HOURLY";
+            } else if (minutes >= 1800 && minutes < 10800) {
+                desire = "SIX_HOURLY";
+            } else {
+                desire = "DAILY";
+            }
+
+            ApiTimeSeriesRequest atsr = new ApiTimeSeriesRequest();
+            atsr.setQuery(condition.getQuery());
+            atsr.setFrom(fromformat);
+            atsr.setTo(toformat);
+            atsr.setDesiredRollup(desire);
+            atsr.setMustUseDesiredRollup(true);
+
+            RootResourceV11 v11 = apiRootResource.getRootV11();
+
+            TimeSeriesResourceV11 t11 = v11.getTimeSeriesResource();
+            Response res = t11.queryTimeSeries(atsr);
+
+            rs.setData(rs);
+        } catch (ParseException e) {
+            rs.addMessage("时间格式化失败！").addError($.exception(e));
         }
 
-        ApiTimeSeriesRequest atsr = new ApiTimeSeriesRequest();
-        atsr.setQuery(condition.getQuery());
-        atsr.setFrom(fromformat);
-        atsr.setTo(toformat);
-        atsr.setDesiredRollup(desire);
-        atsr.setMustUseDesiredRollup(true);
-
-        RootResourceV11 v11 = apiRootResource.getRootV11();
-
-        TimeSeriesResourceV11 t11 = v11.getTimeSeriesResource();
-        Response res = t11.queryTimeSeries(atsr);
-
-        return $.result().setData(res);
+        return rs;
     }
 
     /**
      * cmf请求资源链接
-     * @param type
-     * @return
+     * @param type 类型
+     * @return url
      */
     public String getURL(String type){
         String controller = "";
