@@ -1,10 +1,13 @@
 package com.ailbb.act;
 
 import com.ailbb.act.cmf.$CMF;
+import com.ailbb.act.file.$File;
 import com.ailbb.act.hbase.$HBase;
 import com.ailbb.act.hdfs.$Hdfs;
 import com.ailbb.act.hive.$Hive;
+import com.ailbb.act.kafka.$Kafka;
 import com.ailbb.act.kerberos.$Kerberos;
+import com.ailbb.act.mapreduce.$MapReduce;
 import org.apache.hadoop.hbase.TableName;
 
 /**
@@ -23,8 +26,17 @@ public class $ extends com.ailbb.alt.$ {
     // hdfs
     public static $Hdfs hdfs = new $Hdfs();
 
+    // kafka
+    public static $Kafka kafka = new $Kafka();
+
     // cmf
     public static $CMF cmf = new $CMF();
+
+    // cmf
+    public static $MapReduce mapReduce = new $MapReduce();
+
+    // file
+    public static $File file = new $File();
 
     /**
      * 获取表对象

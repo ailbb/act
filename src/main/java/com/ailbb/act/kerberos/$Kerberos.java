@@ -28,7 +28,7 @@ public class $Kerberos {
      */
     public $Kerberos init($KerberosConnConfiguration kerberosConnConfiguration, $ConfSite confSite){
         $.info("============== kerberos执行初始化 ==============");
-        this.setKerberosConnConfiguration(kerberosConnConfiguration).setConfSite(confSite).valid(); // 设置配置
+        this.setKerberosConnConfiguration(kerberosConnConfiguration).setConfSite(confSite).setUgi(null).valid(); // 设置配置
         return this;
     }
 
@@ -42,16 +42,17 @@ public class $Kerberos {
 
             if(!doCheck()) {
                 doConfig(); // 填写配置信息
-                outInfo(); // 打印输出信息
-                if(doLogin().isSuccess()) { // 进行登录认证
-                    $.info("============== kerberos验证成功 ==============");
-                } else {
+                doLogin();
+                if(!doLogin().isSuccess()) { // 进行登录认证
                     $.error("============== kerberos验证失败 ==============");
                 }
+                outInfo(); // 打印输出信息
             }
 
+            $.info("============== kerberos验证成功 ==============");
             return true;
         } catch (Exception e) {
+            $.error("============== kerberos验证异常 ==============");
             $.exception(e);
             return false;
         }
@@ -91,7 +92,7 @@ public class $Kerberos {
         try {
             UserGroupInformation.setConfiguration(conf);
             this.ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(conf.get("PRINCIPAL"), conf.get("KEYTAB"));
-            rs.addMessage($.error("============== 登录成功 =============="));
+            rs.addMessage($.info("============== 登录成功 =============="));
         } catch (IOException e) {
             rs.addError($.exception(e)).addMessage($.error("============== 登录失败 =============="));
         }
@@ -104,12 +105,13 @@ public class $Kerberos {
      */
     public boolean doCheck() {
         try {
-            ugi.checkTGTAndReloginFromKeytab();
-        } catch (Exception e) {
-            return false;
-        }
+            if(!$.isEmptyOrNull(ugi)) {
+                ugi.checkTGTAndReloginFromKeytab();
+                return true;
+            }
+        } catch (Exception e) {}
 
-        return true;
+        return false;
     }
 
     public <T> T run(PrivilegedExceptionAction<T> action) throws Exception {

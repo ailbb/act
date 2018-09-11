@@ -8,6 +8,7 @@ import com.ailbb.ajj.entity.$ConnConfiguration;
  */
 public class $KafkaConnConfiguration extends $ConnConfiguration {
     private int acks = 1;
+    private int port = 9092;
     private String serializerKey = "org.apache.kafka.common.serialization.ByteArraySerializer";
     private String serializerValue = "org.apache.kafka.common.serialization.ByteArraySerializer";
 
@@ -17,6 +18,17 @@ public class $KafkaConnConfiguration extends $ConnConfiguration {
     key.serializer=org.apache.kafka.common.serialization.ByteArraySerializer
     value.serializer=org.apache.kafka.common.serialization.ByteArraySerializer
      */
+
+    @Override
+    public int getPort() {
+        return port;
+    }
+
+    @Override
+    public $KafkaConnConfiguration setPort(int port) {
+        this.port = port;
+        return this;
+    }
 
     public int getAcks() {
         return acks;
