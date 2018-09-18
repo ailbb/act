@@ -30,7 +30,7 @@ public class $HBase extends $Hadoop {
     private Configuration conf; // 配置信息
     private $Hdfs hdfs; // hdfs
     private Admin admin; // admin
-    public final byte[] $FAMILY = "f0".getBytes();
+    public static final byte[] $FAMILY = "f0".getBytes();
 
     public $HBase init($Kerberos kerberos, $Hdfs hdfs) throws Exception {
         this.setKerberos(kerberos);

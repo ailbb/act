@@ -14,7 +14,7 @@ import java.util.Properties;
  */
 public class $Kafka {
     private Producer producer;
-    public final int $PORT = 9092;
+    public static final int $PORT = 9092;
 
     public $Kafka init($KafkaConnConfiguration kafkaConnConfiguration){
         Properties properties = new Properties();

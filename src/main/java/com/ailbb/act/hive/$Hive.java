@@ -36,8 +36,8 @@ public class $Hive extends $Hadoop {
      */
     private $JDBCConnConfiguration connConfiguration; // 连接配置信息
     private JdbcTemplate jdbcTemplate;
-    public final String $DRIVER = "org.apache.hive.jdbc.HiveDriver";
-    public final int $PORT = 10000;
+    public static final String $DRIVER = "org.apache.hive.jdbc.HiveDriver";
+    public static final int $PORT = 10000;
 
     /**
      * 初始化方法

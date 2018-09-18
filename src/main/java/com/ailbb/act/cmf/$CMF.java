@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class $CMF {
     private $ConnConfiguration connConfiguration;
     private ApiRootResource apiRootResource;
-    public final int $PORT = 7180;
+    public static final int $PORT = 7180;
 
     /**
      * 初始化方法
