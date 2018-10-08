@@ -42,7 +42,6 @@ public class $Kerberos {
 
             if(!doCheck()) {
                 doConfig(); // 填写配置信息
-                doLogin();
                 if(!doLogin().isSuccess()) { // 进行登录认证
                     $.error("============== kerberos验证失败 ==============");
                 }
@@ -143,7 +142,7 @@ public class $Kerberos {
         $.info(String.format("KEYTAB = %s", kerberosConnConfiguration.getKeyTab()));
         $.info(String.format("hadoop.security.authentication = %s", kerberosConnConfiguration.getSecurityAuthentication()));
         
-        $.info(String.format("用户信息 = %s", ugi.getShortUserName()));
+        $.info(String.format("用户信息 = %s", $.isEmptyOrNull(ugi) ? null : ugi.getShortUserName()));
         $.info(String.format("是否需要验证 = %s", UserGroupInformation.isSecurityEnabled()));
     }
 
