@@ -115,7 +115,7 @@ public class $CMF {
             TimeSeriesResourceV11 t11 = v11.getTimeSeriesResource();
             Response res = t11.queryTimeSeries(atsr);
 
-            rs.setData(rs);
+            rs.setData(res);
         } catch (ParseException e) {
             rs.addMessage("时间格式化失败！").addError($.exception(e));
         }
