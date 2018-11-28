@@ -1,5 +1,6 @@
 package com.ailbb.act.entity;
 
+import com.ailbb.act.$;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 
@@ -14,6 +15,26 @@ public class $ConfSite {
     private String mapredSite;
     private String hiveSite;
     private String hbaseSite;
+    private String sentrySite;
+    private String sslClientSite;
+
+    public String getSentrySite() {
+        return sentrySite;
+    }
+
+    public $ConfSite setSentrySite(String sentrySite) {
+        this.sentrySite = sentrySite;
+        return this;
+    }
+
+    public String getSslClientSite() {
+        return sslClientSite;
+    }
+
+    public $ConfSite setSslClientSite(String sslClientSite) {
+        this.sslClientSite = sslClientSite;
+        return this;
+    }
 
     public String getCoreSite() {
         return coreSite;
@@ -74,12 +95,35 @@ public class $ConfSite {
     }
 
     public Configuration addResource(Configuration conf) {
-        conf.addResource(new Path(getCoreSite()));
-        conf.addResource(new Path(getHbaseSite()));
-        conf.addResource(new Path(getYarnSite()));
-        conf.addResource(new Path(getMapredSite()));
-        conf.addResource(new Path(getHiveSite()));
-        conf.addResource(new Path(getHbaseSite()));
+        tryAddResource(conf, getCoreSite(), "core-site");
+        tryAddResource(conf, getHiveSite(), "hive-site");
+        tryAddResource(conf, getHdfsSite(), "hdfs-site");
+        tryAddResource(conf, getHbaseSite(), "hbase-site");
+        tryAddResource(conf, getSentrySite(), "sentry-site");
+        tryAddResource(conf, getYarnSite(), "yarn-site");
+        tryAddResource(conf, getMapredSite(), "mapred-site");
+        tryAddResource(conf, getSslClientSite(), "ssl-client-site");
+        return conf;
+    }
+
+    /**
+     * 防止添加内容出错
+     * @param conf
+     * @param path
+     * @param name
+     * @return
+     */
+    public Configuration tryAddResource(Configuration conf, String path, String name) {
+        try {
+            if(!$.isEmptyOrNull(path)) {
+                conf.addResource(new Path(path));
+            } else {
+                $.warn(name + " is null or empty.");
+            }
+        } catch (Exception e) {
+            $.warn(name + " has not found.");
+        }
+
         return conf;
     }
 }
