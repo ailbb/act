@@ -15,6 +15,7 @@ import java.security.PrivilegedExceptionAction;
  * Created by Wz on 2017/12/5.
  */
 public class $Kerberos {
+    private boolean enable = true;
     private UserGroupInformation ugi; // 用户信息
     private Configuration conf; // 配置信息
     private $ConfSite confSite; // 配置信息
@@ -42,10 +43,17 @@ public class $Kerberos {
 
             if(!doCheck()) {
                 doConfig(); // 填写配置信息
+                outInfo(); // 打印输出信息
+
+                if(!isEnable()) {
+                    $.warn("============== 未执行验证，因为kerberos未启用 ==============");
+                    return false;
+                }
+
                 if(!doLogin().isSuccess()) { // 进行登录认证
                     $.error("============== kerberos验证失败 ==============");
+                    return false;
                 }
-                outInfo(); // 打印输出信息
             }
 
             $.info("============== kerberos验证成功 ==============");
@@ -71,7 +79,7 @@ public class $Kerberos {
         // 解决java.io.IOException: No FileSystem for scheme: hdfs
         conf.set("fs.hdfs.impl",org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
 
-        conf.setBoolean("hadoop.security.authorization", true);
+        conf.setBoolean("hadoop.security.authorization", kerberosConnConfiguration.isAuthorization());
 
         System.setProperty("java.security.krb5.conf", kerberosConnConfiguration.getConfFile());
 
@@ -174,6 +182,15 @@ public class $Kerberos {
 
     public $Kerberos setKerberosConnConfiguration($KerberosConnConfiguration kerberosConnConfiguration) {
         this.kerberosConnConfiguration = kerberosConnConfiguration;
+        return this;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public $Kerberos setEnable(boolean enable) {
+        this.enable = enable;
         return this;
     }
 }

@@ -18,6 +18,7 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
     private String confFile = "/etc/krb5.conf"; // 配置文件
     private String realm; // 非必要
     private String principalUsr; // 非必要
+    private boolean authorization = true; // hadoop.security.authorization
 
     public int getRpcTimeOut() {
         return rpcTimeOut;
@@ -111,5 +112,13 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
     public $KerberosConnConfiguration setRealm(String realm) {
         this.realm = realm;
         return this;
+    }
+
+    public boolean isAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(boolean authorization) {
+        this.authorization = authorization;
     }
 }

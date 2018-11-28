@@ -7,6 +7,7 @@ import com.ailbb.act.hdfs.$Hdfs;
 import com.ailbb.act.kerberos.$Kerberos;
 import com.ailbb.ajj.entity.$Result;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
@@ -15,7 +16,10 @@ import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.io.compress.Compression;
+import org.apache.hadoop.hbase.io.util.HeapMemorySizeUtil;
 import org.apache.hadoop.hbase.regionserver.BloomType;
+import org.apache.hadoop.hbase.util.VersionInfo;
+import org.apache.hadoop.hdfs.HdfsConfiguration;
 
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
@@ -40,8 +44,8 @@ public class $HBase extends $Hadoop {
 
     public $HBase init(Configuration conf, $Hdfs hdfs) throws Exception {
         $.info("============== Hbase执行初始化 ==============");
-        $HBase hbase = this.setConf(conf);
-        this.setHdfs(hdfs);
+
+        $HBase hbase = this.setConf(initHbaseConfiguration(conf)).setHdfs(hdfs);
 
         return this.run(new PrivilegedExceptionAction<$HBase>() {
             @Override
@@ -54,6 +58,24 @@ public class $HBase extends $Hadoop {
             }
         });
 
+    }
+
+    /**
+     * 初始化Hbase配置
+     * @param conf
+     * @return
+     */
+    public Configuration initHbaseConfiguration(Configuration conf){
+        if($.isEmptyOrNull(conf)) return HBaseConfiguration.create();
+
+        conf.setClassLoader(HBaseConfiguration.class.getClassLoader());
+
+        try {
+            HeapMemorySizeUtil.checkForClusterFreeMemoryLimit(conf);
+            return conf;
+        } catch (Exception e) {
+            return HBaseConfiguration.addHbaseResources(conf);
+        }
     }
 
     /**
