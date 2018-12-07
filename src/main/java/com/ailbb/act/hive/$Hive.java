@@ -97,10 +97,44 @@ public class $Hive extends $Hadoop {
     }
 
     /**
+     * 加载资源表
+     * @return
+     */
+    public $Result loadTable(String table, String path)  {
+        return loadTable(table, path, null);
+    }
+
+    /**
+     * 加载资源表
+     * @return
+     */
+    public $Result loadTable(String table, String path, Map<String, Object> partition)  {
+        StringBuffer sql = new StringBuffer();
+
+        sql.append(String.format("load data local inpath '%s' overwrite into table %s", path, table));
+
+        if(!$.isEmptyOrNull(partition)) {
+            sql.append("partition(");
+
+            List<String> list = new ArrayList<>();
+
+            for (String key : partition.keySet()){
+                list.add(String.format("%s='%s'", key, $.str(partition.get(key))));
+            }
+
+            sql.append($.join(list, ","));
+
+            sql.append(")");
+        }
+
+        return run(sql.toString());
+    }
+
+    /**
      * 建分区
      * @return
      */
-    public $Result createPartition(String table, String path, LinkedHashMap<String, String> partition)  {
+    public $Result createPartition(String table, String path, LinkedHashMap<String, Object> partition)  {
         List<Object> params = new ArrayList<>(); // 参数
         List<String> par = new ArrayList<>();
 
@@ -120,7 +154,7 @@ public class $Hive extends $Hadoop {
      * 建分区
      * @return
      */
-    public $Result createPartition(String table, LinkedHashMap<String, String> partition)  {
+    public $Result createPartition(String table, LinkedHashMap<String, Object> partition)  {
         return createPartition(table, null, partition);
     }
 
@@ -128,7 +162,7 @@ public class $Hive extends $Hadoop {
      * 删分区
      * @return
      */
-    public $Result dropPartition(String table, LinkedHashMap<String, String> partition)  {
+    public $Result dropPartition(String table, LinkedHashMap<String, Object> partition)  {
         List<Object> params = new ArrayList<>(); // 参数
         List<String> par = new ArrayList<>();
 

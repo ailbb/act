@@ -9,7 +9,7 @@ Ailbb Cluster Tool.
 <dependency>
     <groupId>com.ailbb</groupId>
     <artifactId>act</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
 </dependency>
 ```
 
