@@ -16,15 +16,16 @@ import java.util.Properties;
  */
 public class $Kafka extends $Hadoop {
     private Producer producer;
-    public static final int $PORT = 9092;
+    private $KafkaConnConfiguration kafkaConnConfiguration;
 
     public $Kafka init($KafkaConnConfiguration kafkaConnConfiguration){
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", $.concat($.notNull(kafkaConnConfiguration.getIp()), ":", $.lastDef($PORT, kafkaConnConfiguration.getPort())));
+        properties.setProperty("bootstrap.servers", kafkaConnConfiguration.getBrokers());
         properties.setProperty("request.required.acks", $.str(kafkaConnConfiguration.getAcks()));
         properties.setProperty("key.serializer", kafkaConnConfiguration.getSerializerKey());
         properties.setProperty("value.serializer", kafkaConnConfiguration.getSerializerValue());
 
+        this.kafkaConnConfiguration = kafkaConnConfiguration;
         return this.setProducer(new KafkaProducer<>(properties));
     }
 
@@ -36,6 +37,7 @@ public class $Kafka extends $Hadoop {
                 ProducerRecord<String, Byte[]> record = new ProducerRecord(topic, $.str(value).getBytes());
                 try {
                     rs.setData(producer.send(record));
+                    $.info("Send Kafka {"+kafkaConnConfiguration.getBrokers()+"} Msg Topic: " + topic );
                 } catch (Exception e) {
                     rs.addError($.exception(e));
                 }

@@ -13,12 +13,12 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
 
     private String principal; // hive/db@CLOUDERA
     private String keyTab; // /home/hive/hive_db.keytab
-    private String securityAuthentication = "kerberos";
+    private String securityAuthentication = "kerberos"; // hadoop.security.authorization
     private String hdfsprefix = "hdfs://myha";
     private String confFile = "/etc/krb5.conf"; // 配置文件
     private String realm; // 非必要
     private String principalUsr; // 非必要
-    private boolean authorization = true; // hadoop.security.authorization
+    private boolean authorization = true; // 是否需要验证kerberos
 
     public int getRpcTimeOut() {
         return rpcTimeOut;
@@ -71,6 +71,7 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
 
     public $KerberosConnConfiguration setSecurityAuthentication(String securityAuthentication) {
         this.securityAuthentication = securityAuthentication;
+        this.authorization = null == securityAuthentication ? false : securityAuthentication.equalsIgnoreCase("kerberos");
         return this;
     }
 
@@ -116,9 +117,5 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
 
     public boolean isAuthorization() {
         return authorization;
-    }
-
-    public void setAuthorization(boolean authorization) {
-        this.authorization = authorization;
     }
 }

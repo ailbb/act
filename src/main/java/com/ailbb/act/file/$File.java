@@ -7,4 +7,5 @@ import com.ailbb.act.file.parquet.$Parquet;
  */
 public class $File extends com.ailbb.ajj.file.$File {
     public $Parquet parquet = new $Parquet();
+
 }

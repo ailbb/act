@@ -95,7 +95,7 @@ public class $HBase extends $Hadoop {
         $Result rs = $.result();
 
         try {
-            rs.setData(this.run(new PrivilegedExceptionAction<$HBase>() {
+            this.run(new PrivilegedExceptionAction<$HBase>() {
                 @Override
                 public $HBase run() throws Exception {
                     TableName tb = toTableName(tableName);
@@ -117,7 +117,7 @@ public class $HBase extends $Hadoop {
 
                     return $.hbase;
                 }
-            }));
+            });
         } catch ($HBaseException.$TableExistsException e) {
             rs.addError($.exception(e)).setSuccess(true); // 可允许出现的错误
         } catch (Exception e) {
@@ -136,7 +136,7 @@ public class $HBase extends $Hadoop {
         $Result rs = $.result();
 
         try {
-            return rs.setData(this.run(new PrivilegedExceptionAction<$HBase>() {
+            this.run(new PrivilegedExceptionAction<$HBase>() {
                 @Override
                 public $HBase run() throws Exception {
                     TableName tb = toTableName(tableName);
@@ -147,7 +147,7 @@ public class $HBase extends $Hadoop {
 
                     return $.hbase;
                 }
-            }));
+            });
         } catch ($HBaseException.$TableNotExistsException e) {
             rs.addError($.exception(e)).setSuccess(true); // 可允许出现的错误
         } catch (Exception e) {
@@ -161,16 +161,18 @@ public class $HBase extends $Hadoop {
         $Result rs = $.result();
 
         try {
-            return rs.setData(this.run(new PrivilegedExceptionAction<$HBase>() {
+            this.run(new PrivilegedExceptionAction<$HBase>() {
                 @Override
                 public $HBase run() throws Exception {
                     if(null != admin) admin.close();
                     return $.hbase;
                 }
-            }));
+            });
         } catch (Exception e) {
             return rs.addError($.exception(e));
         }
+
+        return rs;
     }
 
     /**

@@ -56,7 +56,7 @@ public class $CMF {
                         .withUsernamePassword(connConfiguration.getUsername(), connConfiguration.getPassword()).build()
         );
 
-//        $.post(new Ajax(getURL("login")).setData(JSONObject.fromObject(new HashMap<String, String>(){{
+//        $.post(new Ajax(getURL("login")).setParams(JSONObject.fromObject(new HashMap<String, String>(){{
 //            put("j_username", connConfiguration.getUsername());
 //            put("j_password", connConfiguration.getPassword());
 //        }})));

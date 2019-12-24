@@ -29,10 +29,11 @@ public class $Hadoop {
      * @return  结果集
      */
     public <T> T run(PrivilegedExceptionAction<T> action) throws Exception {
-        if(!$.isEmptyOrNull(kerberos) && kerberos.valid()) {
+        if(!$.isEmptyOrNull(kerberos) && kerberos.isEnable() && kerberos.valid()) {
             $.info("执行Kerberos接口调用。");
             return  kerberos.getUgi().doAs(action);
         } else {
+            $.info("执行普通接口调用。");
             return action.run();
         }
     }

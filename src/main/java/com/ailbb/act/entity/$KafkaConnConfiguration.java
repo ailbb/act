@@ -11,6 +11,7 @@ public class $KafkaConnConfiguration extends $ConnConfiguration {
     private int port = 9092;
     private String serializerKey = "org.apache.kafka.common.serialization.ByteArraySerializer";
     private String serializerValue = "org.apache.kafka.common.serialization.ByteArraySerializer";
+    private String brokers;
 
     /*
     bootstrap.servers=localhost:39092
@@ -18,6 +19,10 @@ public class $KafkaConnConfiguration extends $ConnConfiguration {
     key.serializer=org.apache.kafka.common.serialization.ByteArraySerializer
     value.serializer=org.apache.kafka.common.serialization.ByteArraySerializer
      */
+
+    public $KafkaConnConfiguration(){}
+
+    public $KafkaConnConfiguration(String brokers){ this.brokers = brokers; }
 
     @Override
     public int getPort() {
@@ -57,4 +62,23 @@ public class $KafkaConnConfiguration extends $ConnConfiguration {
         return this;
     }
 
+    public String getBrokers() {
+        return !$.isEmptyOrNull(brokers) ? brokers : $.concat($.notNull(getIp()), ":", getPort());
+    }
+
+    public $KafkaConnConfiguration setBrokers(String brokers) {
+        this.brokers = brokers;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "$KafkaConnConfiguration{" +
+                "acks=" + acks +
+                ", port=" + port +
+                ", serializerKey='" + serializerKey + '\'' +
+                ", serializerValue='" + serializerValue + '\'' +
+                ", brokers='" + brokers + '\'' +
+                '}';
+    }
 }

@@ -5,6 +5,8 @@ import com.ailbb.act.entity.$ConfSite;
 import com.ailbb.ajj.$;
 import com.ailbb.ajj.entity.$Result;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.IOException;
@@ -15,7 +17,6 @@ import java.security.PrivilegedExceptionAction;
  * Created by Wz on 2017/12/5.
  */
 public class $Kerberos {
-    private boolean enable = true;
     private UserGroupInformation ugi; // 用户信息
     private Configuration conf; // 配置信息
     private $ConfSite confSite; // 配置信息
@@ -42,16 +43,12 @@ public class $Kerberos {
             $.info("============== kerberos开始验证 ==============");
 
             if(!doCheck()) {
-                doConfig(); // 填写配置信息
-                outInfo(); // 打印输出信息
+                doConfig(); // 进行参数配置
 
-                if(!isEnable()) {
-                    $.warn("============== 未执行验证，因为kerberos未启用 ==============");
-                    return false;
-                }
+                $Result rs = doLogin();// 填写配置信息
 
-                if(!doLogin().isSuccess()) { // 进行登录认证
-                    $.error("============== kerberos验证失败 ==============");
+                if(!rs.isSuccess()) { // 进行登录认证
+                    if(rs.getError().size() != 0) $.error("============== kerberos验证失败 ==============");
                     return false;
                 }
             }
@@ -69,24 +66,22 @@ public class $Kerberos {
      * @return 连接配置
      */
     public Configuration doConfig() {
-        conf = confSite.addResource(new Configuration()); // 添加资源文件
+        System.setProperty("java.security.krb5.conf", kerberosConnConfiguration.getConfFile());
 
+        conf = confSite.addResource(new Configuration()); // 添加资源文件
         // 设置超时时间
         conf.setInt("hbase.rpc.timeout", kerberosConnConfiguration.getRpcTimeOut());
         conf.setInt("hbase.client.operation.timeout", kerberosConnConfiguration.getOperationTimeOut());
         conf.setInt("hbase.client.scanner.timeout.period", kerberosConnConfiguration.getScannerTimeOut());
 
-        // 解决java.io.IOException: No FileSystem for scheme: hdfs
-        conf.set("fs.hdfs.impl",org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+       // 设置keyberos信息
+        conf.set("kerberos.principal", kerberosConnConfiguration.getPrincipal());
+        conf.set("kerberos.keytab", kerberosConnConfiguration.getKeyTab());
 
-        conf.setBoolean("hadoop.security.authorization", kerberosConnConfiguration.isAuthorization());
-
-        System.setProperty("java.security.krb5.conf", kerberosConnConfiguration.getConfFile());
-
-        // 设置keyberos信息
-        conf.set("PRINCIPAL", kerberosConnConfiguration.getPrincipal());
-        conf.set("KEYTAB", kerberosConnConfiguration.getKeyTab());
-        conf.set("hadoop.security.authentication", kerberosConnConfiguration.getSecurityAuthentication());
+        if($.isEmptyOrNull(conf.get("hadoop.security.authentication")))
+            conf.set("hadoop.security.authentication", kerberosConnConfiguration.getSecurityAuthentication());
+        else
+            kerberosConnConfiguration.setSecurityAuthentication(conf.get("hadoop.security.authentication"));
 
         return conf;
     }
@@ -96,9 +91,18 @@ public class $Kerberos {
      */
     public $Result doLogin()  {
         $Result rs = $.result();
+
         try {
+            UserGroupInformation.reset();
             UserGroupInformation.setConfiguration(conf);
-            this.ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(conf.get("PRINCIPAL"), conf.get("KEYTAB"));
+
+            outInfo(); // 打印输出信息
+
+            if(!kerberosConnConfiguration.isAuthorization() || !UserGroupInformation.isSecurityEnabled()){
+                rs.setSuccess(false).addMessage($.warn("============== 未执行登录，因为kerberos未启用 =============="));
+            }
+
+            this.ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(conf.get("kerberos.principal"), conf.get("kerberos.keytab"));
             rs.addMessage($.info("============== 登录成功 =============="));
         } catch (IOException e) {
             rs.addError($.exception(e)).addMessage($.error("============== 登录失败 =============="));
@@ -151,7 +155,7 @@ public class $Kerberos {
         $.info(String.format("hadoop.security.authentication = %s", kerberosConnConfiguration.getSecurityAuthentication()));
         
         $.info(String.format("用户信息 = %s", $.isEmptyOrNull(ugi) ? null : ugi.getShortUserName()));
-        $.info(String.format("是否需要验证 = %s", UserGroupInformation.isSecurityEnabled()));
+        $.info(String.format("Kerberos 是否启用： %s", UserGroupInformation.isSecurityEnabled()));
     }
 
     public UserGroupInformation getUgi() {
@@ -176,6 +180,10 @@ public class $Kerberos {
         return this;
     }
 
+    public boolean isEnable() {
+        return kerberosConnConfiguration.isAuthorization();
+    }
+
     public $KerberosConnConfiguration getKerberosConnConfiguration() {
         return kerberosConnConfiguration;
     }
@@ -185,12 +193,4 @@ public class $Kerberos {
         return this;
     }
 
-    public boolean isEnable() {
-        return enable;
-    }
-
-    public $Kerberos setEnable(boolean enable) {
-        this.enable = enable;
-        return this;
-    }
 }

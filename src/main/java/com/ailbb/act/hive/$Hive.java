@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 import java.sql.PreparedStatement;
@@ -84,6 +85,30 @@ public class $Hive extends $Hadoop {
      * 建表
      * @return
      */
+    public $Result getDBS()  {
+        return run(String.format("SHOW DATABASES"));
+    }
+
+    /**
+     * 建表
+     * @return
+     */
+    public $Result getTables(String db)  {
+        return run(String.format("SHOW TABLES from %s", db));
+    }
+
+    /**
+     * 建表
+     * @return
+     */
+    public $Result getCols(String db, String table)  {
+        return run(String.format("DESC %s.%s", db, table));
+    }
+
+    /**
+     * 建表
+     * @return
+     */
     public $Result createTable(String sql)  {
         return run(sql);
     }
@@ -108,7 +133,23 @@ public class $Hive extends $Hadoop {
      * 加载资源表
      * @return
      */
+    public $Result loadTable(String table, String path, boolean isDelete)  {
+        return loadTable(table, path, null, isDelete);
+    }
+
+    /**
+     * 加载资源表
+     * @return
+     */
     public $Result loadTable(String table, String path, Map<String, Object> partition)  {
+        return loadTable(table, path, partition, true);
+    }
+
+    /**
+     * 加载资源表
+     * @return
+     */
+    public $Result loadTable(String table, String path, Map<String, Object> partition, boolean isDelete)  {
         StringBuffer sql = new StringBuffer();
 
         sql.append(String.format("load data local inpath '%s' overwrite into table %s", path, table));
@@ -127,7 +168,13 @@ public class $Hive extends $Hadoop {
             sql.append(")");
         }
 
-        return run(sql.toString());
+        $Result rs = execute(sql.toString());
+
+        if(rs.isSuccess() && isDelete) {
+            $.file.delete(path);
+        }
+
+        return rs;
     }
 
     /**
@@ -195,6 +242,57 @@ public class $Hive extends $Hadoop {
                         }
                     });
 
+                }
+            }));
+        } catch (Exception e) {
+            rs.addError($.exception(e));
+        }
+
+        return rs;
+    }
+
+    /**
+     * 执行sql
+     * @param sql 执行sql
+     * @return $Result 结构体
+     */
+    public $Result query(String sql)  {
+        $Result rs = $.result();
+
+        try {
+            rs.setData(this.run(new PrivilegedExceptionAction<List<Map<String, Object>> >() {
+                @Override
+                public List<Map<String, Object>>  run() throws Exception {
+                    $.info("Run Sql: " + sql);
+
+                    return jdbcTemplate.queryForList(sql);
+
+                }
+            }));
+        } catch (Exception e) {
+            rs.addError($.exception(e));
+        }
+
+        return rs;
+    }
+
+    /**
+     * 执行sql
+     * @param sql 执行sql
+     * @return $Result 结构体
+     */
+    public $Result execute(String sql)  {
+        $Result rs = $.result();
+
+        try {
+            rs.setData(this.run(new PrivilegedExceptionAction<Boolean>() {
+                @Override
+                public Boolean run() throws Exception {
+                    $.info("Run Sql: " + sql);
+
+                    jdbcTemplate.execute(sql);
+
+                    return true;
                 }
             }));
         } catch (Exception e) {
