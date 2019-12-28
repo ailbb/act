@@ -116,7 +116,7 @@ public class $Kerberos {
      */
     public boolean doCheck() {
         try {
-            if(!$.isEmptyOrNull(ugi)) {
+            if(!$.isEmptyOrNull(ugi) ) {
                 ugi.checkTGTAndReloginFromKeytab();
                 return true;
             }

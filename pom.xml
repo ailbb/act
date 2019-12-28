@@ -132,7 +132,7 @@
         <version.hbase>1.2.0-cdh5.13.0</version.hbase>
         <version.hive>1.1.0-cdh5.13.0</version.hive>
         <version.hdfs>2.6.0-cdh5.13.0</version.hdfs>
-        <version.kafka>1.1.0</version.kafka>
+        <version.kafka>2.4.0</version.kafka>
 
         <version.parquet>1.9.0</version.parquet>
         <version.spring>4.3.9.RELEASE</version.spring>

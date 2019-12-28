@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import static it.unimi.dsi.fastutil.io.TextIO.BUFFER_SIZE;
 
@@ -171,6 +172,7 @@ public class $Hdfs extends $Hadoop {
 
     public FileSystem getFileSystem() throws Exception {
         try {
+            if(!$.kerberos.valid()) throw new TimeoutException("验证超时...");  // 验证状态
             fileSystem.getStatus();
         } catch (Exception e) { // hdfs连接被关闭异常
             try {
