@@ -49,6 +49,9 @@ public class $Hive extends $Hadoop {
         return init(connConfiguration, null);
     }
 
+    public static void main(String[] args) {
+
+    }
     /**
      * 初始化方法
      * @param connConfiguration
