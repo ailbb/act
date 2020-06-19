@@ -284,6 +284,29 @@ public class $Hive extends $Hadoop {
      * @param sql 执行sql
      * @return $Result 结构体
      */
+    public List<Map<String, Object>> queryForList(String sql)  {
+        try {
+           return this.run(new PrivilegedExceptionAction<List<Map<String, Object>> >() {
+                @Override
+                public List<Map<String, Object>>  run() throws Exception {
+                    $.info("Run Sql: " + sql);
+
+                    return jdbcTemplate.queryForList(sql);
+
+                }
+            });
+        } catch (Exception e) {
+            $.exception(e);
+        }
+
+        return new ArrayList<Map<String, Object>>();
+    }
+
+    /**
+     * 执行sql
+     * @param sql 执行sql
+     * @return $Result 结构体
+     */
     public $Result execute(String sql)  {
         $Result rs = $.result();
 
