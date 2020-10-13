@@ -136,7 +136,7 @@
 
         <version.parquet>1.9.0</version.parquet>
         <version.spring>4.3.9.RELEASE</version.spring>
-        <version.junit>4.12</version.junit>
+        <version.junit>4.13.1</version.junit>
     </properties>
 
     <dependencies>
