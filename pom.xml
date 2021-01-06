@@ -131,7 +131,7 @@
         <version.hadoop>2.6.0-cdh5.13.0</version.hadoop>
         <version.cloudera.api>5.15.0</version.cloudera.api>
         <version.hbase>1.2.0-cdh5.13.0</version.hbase>
-        <version.hive>1.1.0-cdh5.13.0</version.hive>
+        <version.hive>3.1.3000.7.2.6.1-1</version.hive>
         <version.hdfs>2.6.0-cdh5.13.0</version.hdfs>
         <version.kafka>2.4.0</version.kafka>
 
