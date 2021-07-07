@@ -30,13 +30,14 @@ import java.util.concurrent.TimeoutException;
 
 import static it.unimi.dsi.fastutil.io.TextIO.BUFFER_SIZE;
 
-/**
+/*
  * Created by Wz on 8/27/2018.
  */
 public class $Hdfs extends $Hadoop {
     private FileSystem fileSystem = null; // hbase
     private Configuration conf; // 配置信息
     private int HDFS_WRITE_BUFSIZE = 512*1024;
+    private long tryTimeOut = 30*1000; // 默认重试时间为5秒
 
     public $Hdfs init($Kerberos kerberos) throws Exception {
         this.setKerberos(kerberos);
@@ -64,7 +65,7 @@ public class $Hdfs extends $Hadoop {
         });
     }
 
-    /**
+    /*
      * 获取hbase的命名空间
      * @return 结果集
      */
@@ -85,7 +86,7 @@ public class $Hdfs extends $Hadoop {
         });
     }
 
-    /**
+    /*
      *
      * 删路径
      * @param path 路径
@@ -110,7 +111,7 @@ public class $Hdfs extends $Hadoop {
         return rs;
     }
 
-    /**
+    /*
      * 删路径
      * @return $Result 结构体
      */
@@ -118,7 +119,7 @@ public class $Hdfs extends $Hadoop {
         return deletePath(path, true);
     }
 
-    /**
+    /*
      * 删路径
      * @return $Result 结构体
      */
@@ -126,7 +127,7 @@ public class $Hdfs extends $Hadoop {
         return uploadFile(path, descPath, true);
     }
 
-    /**
+    /*
      * 上传文件路径
      * @return $Result 结构体
      */
@@ -176,7 +177,10 @@ public class $Hdfs extends $Hadoop {
             fileSystem.getStatus();
         } catch (Exception e) { // hdfs连接被关闭异常
             try {
-                init(this.conf); // 重新初始化Hbase连接
+                // 验证失败后会不断重试
+                $.warn("验证失败["+e+"]... 系统将在["+tryTimeOut/1000+"] 秒后重试...");
+                Thread.sleep(tryTimeOut);
+                init(this.conf); // 重新初始化HDFS连接
             } catch (Exception ex) {
                 e.printStackTrace();
                 ex.printStackTrace();
@@ -205,5 +209,13 @@ public class $Hdfs extends $Hadoop {
 
         this.conf = conf;
         return this;
+    }
+
+    public long getTryTimeOut() {
+        return tryTimeOut;
+    }
+
+    public void setTryTimeOut(long tryTimeOut) {
+        this.tryTimeOut = tryTimeOut;
     }
 }

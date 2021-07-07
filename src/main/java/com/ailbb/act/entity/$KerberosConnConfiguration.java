@@ -3,7 +3,9 @@ package com.ailbb.act.entity;
 import com.ailbb.ajj.$;
 import com.ailbb.ajj.entity.$ConnConfiguration;
 
-/**
+import static com.ailbb.ajj.$.*;
+
+/*
  * Created by Wz on 8/21/2018.
  */
 public class $KerberosConnConfiguration extends $ConnConfiguration {
@@ -16,6 +18,7 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
     private String securityAuthentication = "kerberos"; // hadoop.security.authorization
     private String hdfsprefix = "hdfs://myha";
     private String confFile = "/etc/krb5.conf"; // 配置文件
+    private final String DEFAULT_CONFFILE = "kerberos/krb5.conf"; // 默认配置项
     private String realm; // 非必要
     private String principalUsr; // 非必要
     private boolean authorization = true; // 是否需要验证kerberos
@@ -85,6 +88,14 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
     }
 
     public String getConfFile() {
+        if(!$.file.isExists(confFile)) {
+
+            confFile = path.getTempPath(DEFAULT_CONFFILE);
+
+            if(!$.file.isExists(confFile)) $.file.copyFile(rel(path.getRootPath(this.getClass()), DEFAULT_CONFFILE), confFile); // 拷贝文件到临时目录（jar包内的，不支持解）
+
+            $.warn("未找到kerberos认证文件[krb5.conf]，尝试使用默认文件...["+confFile+"]");
+        }
         return confFile;
     }
 
@@ -118,4 +129,5 @@ public class $KerberosConnConfiguration extends $ConnConfiguration {
     public boolean isAuthorization() {
         return authorization;
     }
+
 }

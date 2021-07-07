@@ -3,7 +3,7 @@ package com.ailbb.act.entity;
 import com.ailbb.ajj.$;
 import com.ailbb.ajj.entity.$ConnConfiguration;
 
-/**
+/*
  * Created by Wz on 8/21/2018.
  */
 public class $KafkaConnConfiguration extends $ConnConfiguration {

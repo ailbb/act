@@ -16,7 +16,7 @@ import org.apache.parquet.avro.AvroParquetInputFormat;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 
-/**
+/*
  * Created by Wz on 9/10/2018.
  */
 public class $MapReduce extends Configured implements Tool {
@@ -33,7 +33,7 @@ public class $MapReduce extends Configured implements Tool {
         });
     }
 
-    /**
+    /*
      * 使用ToolRunner执行run
      * @param args
      * @throws Exception
@@ -52,7 +52,7 @@ public class $MapReduce extends Configured implements Tool {
         return job.waitForCompletion(true);
     }
 
-    /**
+    /*
      * 初始化Job
      */
     private $MapReduce initJob() throws Exception {

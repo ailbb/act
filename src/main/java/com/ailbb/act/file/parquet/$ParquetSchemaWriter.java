@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-/**
+/*
  * Created by Wz on 2017/12/29.
  */
 public class $ParquetSchemaWriter {

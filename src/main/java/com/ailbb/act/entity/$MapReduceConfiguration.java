@@ -11,7 +11,7 @@ import org.apache.parquet.avro.AvroParquetInputFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by Wz on 9/10/2018.
  */
 public class $MapReduceConfiguration {

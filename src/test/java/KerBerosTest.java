@@ -1,10 +1,78 @@
+import com.ailbb.act.$;
+import com.ailbb.act.entity.$KerberosConnConfiguration;
 import com.ailbb.act.kerberos.$Kerberos;
 import org.apache.hadoop.fs.FileStatus;
+import org.junit.Test;
+import sun.security.krb5.KrbException;
 
-/**
+import java.io.*;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
+
+/*
  * Created by Wz on 9/10/2018.
  */
 public class KerBerosTest {
+    public void testKrb5() throws Exception {
+        String var1 = "/D:/Program%20Files/Apache/Maven/apache-maven-3.6.3/repository/com/ailbb/act/1.0-SNAPSHOT/act-1.0-SNAPSHOT.jar!/kerberos/krb5.conf";
+        ArrayList var2 = new ArrayList();
+
+        BufferedReader var3 = new BufferedReader(new InputStreamReader(new FileInputStream(new File(var1))));
+        Throwable var4 = null;
+
+        String var6 = null;
+
+        String var5;
+        while ((var5 = var3.readLine()) != null) {
+            var5 = var5.trim();
+            if (!var5.isEmpty() && !var5.startsWith("#") && !var5.startsWith(";")) {
+                if (var5.startsWith("[")) {
+                    if (!var5.endsWith("]")) {
+                        throw new KrbException("Illegal config content:" + var5);
+                    }
+
+                    if (var6 != null) {
+                        var2.add(var6);
+                        var2.add("}");
+                    }
+
+                    String var7 = var5.substring(1, var5.length() - 1).trim();
+                    if (var7.isEmpty()) {
+                        throw new KrbException("Illegal config content:" + var5);
+                    }
+
+                    var6 = var7 + " = {";
+                } else if (var5.startsWith("{")) {
+                    if (var6 == null) {
+                        throw new KrbException("Config file should not start with \"{\"");
+                    }
+
+                    var6 = var6 + " {";
+                    if (var5.length() > 1) {
+                        var2.add(var6);
+                        var6 = var5.substring(1).trim();
+                    }
+                } else if (var6 != null) {
+                    var2.add(var6);
+                    var6 = var5;
+                }
+            }
+        }
+
+        if (var6 != null) {
+            var2.add(var6);
+            var2.add("}");
+        }
+
+
+        System.out.println(var2);
+    }
+
+    public void t(){
+        new $KerberosConnConfiguration().getConfFile();
+    }
+
     public static void doTest() throws Exception {
         java.lang.System.setProperty("java.security.krb5.conf",  "/etc/krb5.conf");
         org.apache.hadoop.conf.Configuration hconf = new org.apache.hadoop.conf.Configuration();

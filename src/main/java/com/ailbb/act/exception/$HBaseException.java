@@ -1,10 +1,10 @@
 package com.ailbb.act.exception;
 
-/**
+/*
  * Created by Wz on 8/31/2018.
  */
 public class $HBaseException {
-    /**
+    /*
      * 表存在异常
      */
     public static class $TableExistsException extends Exception {
@@ -26,7 +26,7 @@ public class $HBaseException {
         }
     }
 
-    /**
+    /*
      * 表不存在异常
      */
     public static class $TableNotExistsException extends Exception {

@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 
-/**
+/*
  * Created by Wz on 8/24/2018.
  */
 public class $Hadoop {
@@ -22,7 +22,7 @@ public class $Hadoop {
         return this;
     }
 
-    /**
+    /*
      * 运行
      * @param action 接口对象
      * @param <T> 泛型

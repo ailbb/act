@@ -11,7 +11,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import java.security.PrivilegedExceptionAction;
 import java.util.Properties;
 
-/**
+/*
  * Created by Wz on 8/28/2018.
  */
 public class $Kafka extends $Hadoop {

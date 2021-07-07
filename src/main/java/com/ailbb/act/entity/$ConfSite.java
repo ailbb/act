@@ -4,7 +4,7 @@ import com.ailbb.act.$;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 
-/**
+/*
  * 集群配置文件
  * Created by Wz on 8/10/2018.
  */
@@ -106,7 +106,7 @@ public class $ConfSite {
         return conf;
     }
 
-    /**
+    /*
      * 防止添加内容出错
      * @param conf
      * @param path

@@ -2,6 +2,7 @@ package com.ailbb.act.kerberos;
 
 import com.ailbb.act.entity.$KerberosConnConfiguration;
 import com.ailbb.act.entity.$ConfSite;
+import com.ailbb.act.exception.$KerberosException;
 import com.ailbb.ajj.$;
 import com.ailbb.ajj.entity.$Result;
 import org.apache.hadoop.conf.Configuration;
@@ -12,7 +13,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 
-/**
+/*
  * Kerberos验证
  * Created by Wz on 2017/12/5.
  */
@@ -22,7 +23,7 @@ public class $Kerberos {
     private $ConfSite confSite; // 配置信息
     private $KerberosConnConfiguration kerberosConnConfiguration;
 
-    /**
+    /*
      * 执行初始化
      * @param kerberosConnConfiguration kerberos连接配置对象
      * @param confSite xml路径配置
@@ -34,7 +35,7 @@ public class $Kerberos {
         return this;
     }
 
-    /**
+    /*
      * 验证方法
      * @return 是否成功
      */
@@ -62,7 +63,7 @@ public class $Kerberos {
         }
     }
 
-    /**
+    /*
      * @return 连接配置
      */
     public Configuration doConfig() {
@@ -86,7 +87,7 @@ public class $Kerberos {
         return conf;
     }
 
-    /**
+    /*
      * @return $Result 结构体
      */
     public $Result doLogin()  {
@@ -111,7 +112,7 @@ public class $Kerberos {
         return rs;
     }
 
-    /**
+    /*
      * @return 是否成功
      */
     public boolean doCheck() {
@@ -133,7 +134,7 @@ public class $Kerberos {
         return $.isEmptyOrNull(this.getUgi()) ? action.run() : this.getUgi().doAs(action);
     }
 
-    /**
+    /*
      * 打印验证消息
      */
     private void outInfo(){

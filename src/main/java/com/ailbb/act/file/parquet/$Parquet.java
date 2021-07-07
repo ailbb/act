@@ -20,7 +20,7 @@ import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by Wz on 9/10/2018.
  */
 public class $Parquet {
@@ -30,15 +30,8 @@ public class $Parquet {
         return setHdfs(hdfs);
     }
 
-    /**
+    /*
      * 读取路径数据
-     * @param path
-     * @param c
-     * @throws IOException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
      */
     public List<Object> readFiles(String path, Class c) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Group line;
@@ -53,14 +46,8 @@ public class $Parquet {
         return datas;
     }
 
-    /**
+    /*
      * 读取路径数据
-     * @param path
-     * @throws IOException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
      */
     public List<Group> readFiles(String path) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Group line;
@@ -75,14 +62,8 @@ public class $Parquet {
         return datas;
     }
 
-    /**
+    /*
      * 读取路径数据
-     * @param path
-     * @throws IOException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
      */
     public List<GenericRecord> readGenericRecordFiles(String path) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         GenericRecord line;
@@ -97,15 +78,8 @@ public class $Parquet {
         return datas;
     }
 
-    /**
+    /*
      * 读取路径数据
-     * @param path
-     * @param c
-     * @throws IOException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
      */
     public List<Object> readGenericRecordFiles(String path, Class c) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         GenericRecord line;
@@ -120,33 +94,22 @@ public class $Parquet {
         return datas;
     }
 
-    /**
+    /*
      * 写数据文件
-     * @param path
-     * @param schema
-     * @param o
-     * @throws IOException
      */
     public void writeGenericRecordFiles(String path, Schema schema, Object o) throws Exception {
         getParquetSchemaWriter(path, schema).write(o).close();
     }
 
-    /**
+    /*
      * 写数据文件
-     * @param path
-     * @param schema
-     * @param ol
-     * @throws IOException
      */
     public void writeGenericRecordFiles(String path, Schema schema, List<Object> ol) throws Exception {
         getParquetSchemaWriter(path, schema).write(ol).close();
     }
 
-    /**
+    /*
      * 获取一个Parquet写对象
-     * @param path
-     * @return
-     * @throws IOException
      */
     public $ParquetSchemaWriter getParquetSchemaWriter(String path, Schema schema) throws Exception {
         ParquetWriter parquetWriter;
@@ -160,11 +123,8 @@ public class $Parquet {
         return new $ParquetSchemaWriter( parquetWriter, schema );
     }
 
-    /**
+    /*
      * 获取一个空的路径
-     * @param path
-     * @return
-     * @throws IOException
      */
     public Path getParquetWritePath(String path) throws Exception {
         return hdfs.run(new PrivilegedExceptionAction<Path>() {
@@ -183,11 +143,8 @@ public class $Parquet {
         });
     }
 
-    /**
+    /*
      * 获取一个空的路径
-     * @param path
-     * @return
-     * @throws IOException
      */
     public Path getRandomPath(String path) throws Exception {
         return hdfs.run(new PrivilegedExceptionAction<Path>() {

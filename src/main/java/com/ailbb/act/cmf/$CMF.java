@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-/**
+/*
  * Created by Wz on 8/22/2018.
  */
 public class $CMF {
@@ -28,7 +28,7 @@ public class $CMF {
     private ApiRootResource apiRootResource;
     public static final int $PORT = 7180;
 
-    /**
+    /*
      * 初始化方法
      * @param connConfiguration 连接配置
      * @return 当前对象
@@ -45,7 +45,7 @@ public class $CMF {
         return this;
     }
 
-    /**
+    /*
      * 登录cm
      * @return 结果对象
      */
@@ -64,7 +64,7 @@ public class $CMF {
         return $.result();
     }
 
-    /**
+    /*
      * 获取响应数据
      * @param response 数据对象
      * @return $Result 结构体
@@ -74,7 +74,7 @@ public class $CMF {
         return $.result().setData(jsonObject.get("items"));
     }
 
-    /**
+    /*
      * 获取数据
      * @param condition $CmfCondition
      * @return $Result 结构体
@@ -123,7 +123,7 @@ public class $CMF {
         return rs;
     }
 
-    /**
+    /*
      * cmf请求资源链接
      * @param type 类型
      * @return url

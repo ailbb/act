@@ -5,12 +5,13 @@ import com.ailbb.act.file.$File;
 import com.ailbb.act.hbase.$HBase;
 import com.ailbb.act.hdfs.$Hdfs;
 import com.ailbb.act.hive.$Hive;
+import com.ailbb.act.jdbc.$JDBC;
 import com.ailbb.act.kafka.$Kafka;
 import com.ailbb.act.kerberos.$Kerberos;
 import com.ailbb.act.mapreduce.$MapReduce;
 import org.apache.hadoop.hbase.TableName;
 
-/**
+/*
  * Created by Wz on 7/19/2018.
  */
 public class $ extends com.ailbb.alt.$ {
@@ -38,7 +39,10 @@ public class $ extends com.ailbb.alt.$ {
     // file
     public static $File file = new $File();
 
-    /**
+    // file
+    public static $JDBC jdbc = new $JDBC();
+
+    /*
      * 获取表对象
      * @param tableName
      * @return TableName type

@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import java.security.PrivilegedExceptionAction;
 
-/**
+/*
  * Created by Wz on 9/10/2018.
  */
 public class KafkaTest {

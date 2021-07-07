@@ -12,6 +12,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,11 +21,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
+/*
  * Created by Wz on 8/10/2018.
  */
 public class $Hive extends $Hadoop {
-    /**
+    /*
      * demo
      *
      private String driver = "org.apache.hive.jdbc.HiveDriver";
@@ -40,10 +42,9 @@ public class $Hive extends $Hadoop {
     public static final String $DRIVER = "org.apache.hive.jdbc.HiveDriver";
     public static final int $PORT = 10000;
 
-    /**
+    /*
      * 初始化方法
      * @param connConfiguration
-     * @return
      */
     public $Hive init($JDBCConnConfiguration connConfiguration) throws Exception {
         return init(connConfiguration, null);
@@ -52,10 +53,9 @@ public class $Hive extends $Hadoop {
     public static void main(String[] args) {
 
     }
-    /**
+    /*
      * 初始化方法
      * @param connConfiguration
-     * @return
      */
     public $Hive init($JDBCConnConfiguration connConfiguration, $Kerberos kerberos) throws Exception {
         $.info("============== Hive执行初始化 ==============");
@@ -84,73 +84,64 @@ public class $Hive extends $Hadoop {
         }
     }
 
-    /**
+    /*
      * 建表
-     * @return
      */
     public $Result getDBS()  {
         return run(String.format("SHOW DATABASES"));
     }
 
-    /**
+    /*
      * 建表
-     * @return
      */
     public $Result getTables(String db)  {
         return run(String.format("SHOW TABLES from %s", db));
     }
 
-    /**
+    /*
      * 建表
-     * @return
      */
     public $Result getCols(String db, String table)  {
         return run(String.format("DESC %s.%s", db, table));
     }
 
-    /**
+    /*
      * 建表
-     * @return
      */
     public $Result createTable(String sql)  {
         return run(sql);
     }
 
-    /**
+    /*
      * 删表
-     * @return
      */
     public $Result dropTable(String table)  {
         return run(String.format("DROP TABLE IF EXISTS %s", table));
     }
 
-    /**
+    /*
      * 加载资源表
-     * @return
      */
     public $Result loadTable(String table, String path)  {
         return loadTable(table, path, null);
     }
 
-    /**
+    /*
      * 加载资源表
-     * @return
      */
     public $Result loadTable(String table, String path, boolean isDelete)  {
         return loadTable(table, path, null, isDelete);
     }
 
-    /**
+    /*
      * 加载资源表
-     * @return
      */
     public $Result loadTable(String table, String path, Map<String, Object> partition)  {
         return loadTable(table, path, partition, true);
     }
 
-    /**
+    /*
      * 加载资源表
-     * @return
      */
     public $Result loadTable(String table, String path, Map<String, Object> partition, boolean isDelete)  {
         StringBuffer sql = new StringBuffer();
@@ -180,7 +171,7 @@ public class $Hive extends $Hadoop {
         return rs;
     }
 
-    /**
+    /*
      * 建分区
      * @return
      */
@@ -200,7 +191,7 @@ public class $Hive extends $Hadoop {
         return run(sql, params);
     }
 
-    /**
+    /*
      * 建分区
      * @return
      */
@@ -208,7 +199,7 @@ public class $Hive extends $Hadoop {
         return createPartition(table, null, partition);
     }
 
-    /**
+    /*
      * 删分区
      * @return
      */
@@ -224,7 +215,7 @@ public class $Hive extends $Hadoop {
         return run(String.format("ALTER TABLE ? DROP IF EXISTS PARTITION(%s)", table, $.join(par, ",")), params);
     }
 
-    /**
+    /*
      * 执行sql
      * @param sql 执行sql
      * @param list 参数
@@ -254,7 +245,7 @@ public class $Hive extends $Hadoop {
         return rs;
     }
 
-    /**
+    /*
      * 执行sql
      * @param sql 执行sql
      * @return $Result 结构体
@@ -279,7 +270,7 @@ public class $Hive extends $Hadoop {
         return rs;
     }
 
-    /**
+    /*
      * 执行sql
      * @param sql 执行sql
      * @return $Result 结构体
@@ -302,7 +293,7 @@ public class $Hive extends $Hadoop {
         return new ArrayList<Map<String, Object>>();
     }
 
-    /**
+    /*
      * 执行sql
      * @param sql 执行sql
      * @return $Result 结构体
@@ -328,7 +319,7 @@ public class $Hive extends $Hadoop {
         return rs;
     }
 
-    /**
+    /*
      * 执行sql
      * @param sql 执行sql
      * @return $Result 结构体
@@ -337,7 +328,7 @@ public class $Hive extends $Hadoop {
         return run(sql, new ArrayList<>());
     }
 
-    /**
+    /*
      * get/set方法
      * @return jdbc连接
      */
@@ -359,7 +350,7 @@ public class $Hive extends $Hadoop {
         return this;
     }
 
-    /**
+    /*
      * 获取连接串
      * @return jdbc连接配置
      */

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 import java.util.List;
 
-/**
+/*
  * Hbase操作
  * Created by Wz on 8/10/2018.
  */
@@ -60,7 +60,7 @@ public class $HBase extends $Hadoop {
 
     }
 
-    /**
+    /*
      * 初始化Hbase配置
      * @param conf
      * @return
@@ -78,7 +78,7 @@ public class $HBase extends $Hadoop {
         }
     }
 
-    /**
+    /*
      * 获取hbase的命名空间
      * @return 结果集
      */
@@ -86,7 +86,7 @@ public class $HBase extends $Hadoop {
         return hdfs.getNameSpace("/hbase/data/");
     }
 
-    /**
+    /*
      * 建表
      * @param tableName 表名称
      * @return 结果集
@@ -127,7 +127,7 @@ public class $HBase extends $Hadoop {
         return rs;
     }
 
-    /**
+    /*
      * 删表
      * @param tableName 表名称
      * @return $Result 结构体
@@ -175,7 +175,7 @@ public class $HBase extends $Hadoop {
         return rs;
     }
 
-    /**
+    /*
      * 获取表对象
      * @param tableName 表名称
      * @return 表名
@@ -184,7 +184,7 @@ public class $HBase extends $Hadoop {
         return TableName.valueOf(tableName);
     }
 
-    /**
+    /*
      * GET/SET 方法
      * @return 连接对象
      */
