@@ -1,8 +1,10 @@
 package com.ailbb.act.file;
 
 import com.ailbb.act.$;
+import com.ailbb.ajj.entity.$Result;
 import com.ailbb.ajj.log.$Logger;
 import com.ailbb.alt.ftp.$Ftp;
+import com.ailbb.alt.ftp.$FtpKPI;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -73,8 +75,10 @@ public class $FtpCluster extends $Ftp {
         return res;
     }
 
-    public boolean uploadDirectory(Path srcPath, String destPath, String prefix, String suffix) {
-        boolean res = false;
+    public $Result uploadDirectory(Path srcPath, String destPath, String prefix, String suffix) {
+        $Result res = $.result();
+        $FtpKPI kpi = new $FtpKPI();
+
         try {
             FileStatus[] files = fs.listStatus(srcPath, new PathFilter() {
                 @Override
@@ -82,24 +86,40 @@ public class $FtpCluster extends $Ftp {
                     return !path.getName().startsWith("_") && !path.getName().startsWith(".");
                 }
             });
-            if (files.length == 0) return true;
+            if (files.length == 0) return res;
+
             final String destParent = (destPath == null || destPath.isEmpty()) ? "" : !destPath.endsWith("/") ? (destPath + "/") : destPath;
             int index = 0;
             if($.isEmptyOrNull(prefix)) prefix = $.now("ns");
             logger.info("ready to upload " + prefix + " to ftp.");
+            long dt = System.currentTimeMillis();
+
             for (FileStatus f : files) {
                 String fileName = String.format(prefix, index) + suffix;
-                res = uploadFile(fs.open(f.getPath()), f.getLen(), destParent, fileName).isSuccess();
-                if (!res) {
-                    logger.error("failed to update " + f.getPath().toString() + " with filename " + prefix);
+                $Result rs = uploadFile(fs.open(f.getPath()), f.getLen(), destParent, fileName);
+                $FtpKPI _kpi = (($FtpKPI)rs.getData());
+
+                kpi.setFilecount(kpi.getFilecount() + _kpi.getFilecount());
+                kpi.setRecord(kpi.getRecord() + _kpi.getRecord());
+                kpi.setWriteByte(kpi.getWriteByte() + _kpi.getWriteByte());
+
+                if (!rs.isSuccess()) {
+                    String msg = "failed to update " + f.getPath().toString() + " with filename " + fileName;
+                    logger.error(msg);
+                    res.setSuccess(false).addMessage(msg);
                     break;
                 }
+
                 index++;
             }
+
+            kpi.setFlow(kpi.getWriteByte() / (System.currentTimeMillis() - dt));
         } catch (Exception e) {
             logger.error(e);
+            res.setSuccess(false).addMessage(e.toString());
         }
-        return res;
+
+        return res.setData(kpi);
     }
 
 }

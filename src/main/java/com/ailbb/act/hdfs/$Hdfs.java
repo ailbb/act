@@ -22,6 +22,8 @@ import org.apache.hadoop.hbase.regionserver.BloomType;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.security.Groups;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
@@ -120,7 +122,7 @@ public class $Hdfs extends $Hadoop {
     }
 
     /*
-     * 删路径
+     *
      * @return $Result 结构体
      */
     public $Result uploadFile(String path, String descPath)  {
@@ -170,6 +172,48 @@ public class $Hdfs extends $Hadoop {
 
         return rs;
     }
+
+
+    /*
+     * 上传文件路径
+     * @return $Result 结构体
+     */
+    public $Result downloadFile(String path, String descPath, boolean overwrite)  {
+        $Result rs = $.result();
+
+        try {
+            this.run(new PrivilegedExceptionAction<$Hdfs>() {
+                @Override
+                public $Hdfs run() throws Exception {
+                    Path sp = new Path(path);
+                    Path dp = new Path(descPath);
+                    $.info("download " + path + " to " + descPath);
+
+                    try {
+                        getFileSystem().copyToLocalFile(false, sp, dp);
+                    } catch (Exception e) {
+                        $.warn(e);
+
+                        BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream($.getFile(descPath)));
+
+                        try {
+                            IOUtils.copyBytes(getFileSystem().open(sp), fos, BUFFER_SIZE, true);
+                        } finally {
+                            $.file.closeStearm(fos);
+                        }
+                    }
+
+                    return $.hdfs;
+                }
+            });
+        } catch (Exception e) {
+            return rs.addError($.exception(e));
+        }
+
+        return rs;
+    }
+
+
 
     public FileSystem getFileSystem() throws Exception {
         try {
