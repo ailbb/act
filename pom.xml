@@ -6,7 +6,7 @@
 
     <groupId>com.ailbb</groupId>
     <artifactId>act</artifactId>
-    <version>1.3</version>
+    <version>1.4</version>
 
     <packaging>jar</packaging>
 
@@ -138,11 +138,12 @@
         <version.ailbb.alt>1.3</version.ailbb.alt>
 
         <version.commons>3.6</version.commons>
-        <version.hadoop>2.6.0-cdh5.13.0</version.hadoop>
         <version.cloudera.api>5.15.0</version.cloudera.api>
-        <version.hbase>1.2.0-cdh5.13.0</version.hbase>
-        <version.hive>1.1.0-cdh5.13.0</version.hive>
-        <version.hdfs>2.6.0-cdh5.13.0</version.hdfs>
+
+        <version.hadoop>3.0.0-cdh6.3.4</version.hadoop>
+        <version.hbase>2.1.0-cdh6.3.4</version.hbase>
+        <version.hive>2.1.1-cdh6.3.4</version.hive>
+        <version.hdfs>3.0.0-cdh6.3.4</version.hdfs>
         <version.kafka>2.4.0</version.kafka>
 
         <version.parquet>1.9.0</version.parquet>
@@ -192,12 +193,6 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
-            <version>${version.hadoop}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
             <version>${version.hadoop}</version>
         </dependency>
 
@@ -270,6 +265,13 @@
             <version>${version.junit}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/eigenbase/eigenbase-properties -->
+<!--        <dependency>-->
+<!--            <groupId>eigenbase</groupId>-->
+<!--            <artifactId>eigenbase-properties</artifactId>-->
+<!--            <version>1.1.4</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 

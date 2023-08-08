@@ -16,7 +16,6 @@ import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.io.compress.Compression;
-import org.apache.hadoop.hbase.io.util.HeapMemorySizeUtil;
 import org.apache.hadoop.hbase.regionserver.BloomType;
 import org.apache.hadoop.hbase.util.VersionInfo;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -71,7 +70,7 @@ public class $HBase extends $Hadoop {
         conf.setClassLoader(HBaseConfiguration.class.getClassLoader());
 
         try {
-            HeapMemorySizeUtil.checkForClusterFreeMemoryLimit(conf);
+//            HeapMemorySizeUtil.checkForClusterFreeMemoryLimit(conf);
             return conf;
         } catch (Exception e) {
             return HBaseConfiguration.addHbaseResources(conf);
