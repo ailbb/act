@@ -135,9 +135,9 @@
 
         <version.jsonlib>2.4</version.jsonlib>
         <version.servlet>3.1.0</version.servlet>
-        <version.ailbb.alt>1.3</version.ailbb.alt>
+        <version.ailbb.alt>1.4</version.ailbb.alt>
 
-        <version.commons>3.6</version.commons>
+        <version.commons-lang3>3.13.0</version.commons-lang3>
         <version.cloudera.api>5.15.0</version.cloudera.api>
 
         <version.hadoop>3.0.0-cdh6.3.4</version.hadoop>
@@ -147,8 +147,8 @@
         <version.kafka>2.4.0</version.kafka>
 
         <version.parquet>1.9.0</version.parquet>
-        <version.spring>4.3.9.RELEASE</version.spring>
-        <version.junit>4.12</version.junit>
+        <version.spring>6.0.3</version.spring>
+        <version.junit>5.10.0</version.junit>
     </properties>
 
     <dependencies>
@@ -179,7 +179,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${version.commons}</version>
+            <version>${version.commons-lang3}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client -->
@@ -258,10 +258,17 @@
             <version>${version.spring}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <!--        <dependency>-->
+        <!--            <groupId>junit</groupId>-->
+        <!--            <artifactId>junit</artifactId>-->
+        <!--            <version>4.13.2</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
             <version>${version.junit}</version>
             <scope>test</scope>
         </dependency>
