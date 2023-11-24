@@ -159,7 +159,7 @@ public class $Hdfs extends $Hadoop {
                         try {
                             IOUtils.copyBytes($.file.getInputStream(path), fos, BUFFER_SIZE, true);
                         } finally {
-                            $.file.closeStearm(fos);
+                            $.file.closeStream(fos);
                         }
                     }
 
@@ -199,7 +199,7 @@ public class $Hdfs extends $Hadoop {
                         try {
                             IOUtils.copyBytes(getFileSystem().open(sp), fos, BUFFER_SIZE, true);
                         } finally {
-                            $.file.closeStearm(fos);
+                            $.file.closeStream(fos);
                         }
                     }
 

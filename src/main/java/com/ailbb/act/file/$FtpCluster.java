@@ -1,10 +1,10 @@
 package com.ailbb.act.file;
 
 import com.ailbb.act.$;
+import com.ailbb.ajj.entity.$ConnConfiguration;
 import com.ailbb.ajj.entity.$Result;
-import com.ailbb.ajj.log.$Logger;
-import com.ailbb.alt.ftp.$Ftp;
-import com.ailbb.alt.ftp.$FtpKPI;
+import com.ailbb.alt.ftp.impl.$XFtp;
+import com.ailbb.alt.ftp.impl.$FtpKPI;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -13,10 +13,8 @@ import org.apache.hadoop.fs.PathFilter;
 /*
  * Created by IvyChoi on 2019/4/2.
  */
-public class $FtpCluster extends $Ftp {
+public class $FtpCluster extends $XFtp {
     private FileSystem fs;
-
-    public $FtpCluster() {}
 
     public $FtpCluster(String host, int port, String user_name, String password) {
         super(host, port, user_name, password);
@@ -26,6 +24,10 @@ public class $FtpCluster extends $Ftp {
         } catch (Exception e) {
             logger.warn(e);
         }
+    }
+
+    public $FtpCluster($ConnConfiguration connConfiguration) {
+        super(connConfiguration);
     }
 
     /*

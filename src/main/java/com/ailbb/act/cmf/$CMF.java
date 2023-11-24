@@ -2,10 +2,8 @@ package com.ailbb.act.cmf;
 
 import com.ailbb.act.$;
 import com.ailbb.act.entity.$CmfCondition;
-import com.ailbb.ajj.entity.$Condition;
 import com.ailbb.ajj.entity.$ConnConfiguration;
 import com.ailbb.ajj.entity.$Result;
-import com.ailbb.ajj.http.Ajax;
 import com.cloudera.api.ApiRootResource;
 import com.cloudera.api.ClouderaManagerClientBuilder;
 import com.cloudera.api.model.ApiTimeSeriesRequest;
@@ -16,9 +14,7 @@ import org.apache.cxf.jaxrs.impl.ResponseImpl;
 
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 /*
  * Created by Wz on 8/22/2018.

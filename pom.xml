@@ -135,7 +135,7 @@
 
         <version.jsonlib>2.4</version.jsonlib>
         <version.servlet>3.1.0</version.servlet>
-        <version.ailbb.alt>1.4</version.ailbb.alt>
+        <version.ailbb.alt>1.5</version.ailbb.alt>
 
         <version.commons-lang3>3.13.0</version.commons-lang3>
         <version.cloudera.api>5.15.0</version.cloudera.api>
