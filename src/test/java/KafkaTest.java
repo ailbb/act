@@ -7,7 +7,7 @@ import com.ailbb.act.kafka.$Kafka;
 import com.ailbb.act.kerberos.$Kerberos;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.security.PrivilegedExceptionAction;
 
@@ -28,22 +28,22 @@ public class KafkaTest {
         $ConfSite confSite = new $ConfSite();
 
         kerberosConnConfiguration // berberos所在机器
-                .setPrincipal("hive/db@CLOUDERA")
-                .setKeyTab("/keytab/hive_db.keytab")
+                .setPrincipal("hive/demo@DEMO_REALM")
+                .setKeyTab("/demo/keytab/demo.keytab")
 
                 .setIp("127.0.0.1")
-                .setUsername("root")
-                .setPassword("123456")
+                .setUsername("demo_user")
+                .setPassword("demo_password")
         ;
 
-        confSite.setCoreSite("/broadtech/core-site.xml")
-                .setHiveSite("/broadtech/hive-site.xml")
-                .setHdfsSite("/broadtech/hdfs-site.xml")
-                .setHbaseSite("/broadtech/hbase-site.xml")
-                .setSentrySite("/broadtech/sentry-site.xml")
-                .setYarnSite("/broadtech/yarn-site.xml")
-                .setMapredSite("/broadtech/mapred-site.xml")
-                .setSslClientSite("/broadtech/ssl-client-site.xml");
+        confSite.setCoreSite("/demo/conf/core-site.xml")
+                .setHiveSite("/demo/conf/hive-site.xml")
+                .setHdfsSite("/demo/conf/hdfs-site.xml")
+                .setHbaseSite("/demo/conf/hbase-site.xml")
+                .setSentrySite("/demo/conf/sentry-site.xml")
+                .setYarnSite("/demo/conf/yarn-site.xml")
+                .setMapredSite("/demo/conf/mapred-site.xml")
+                .setSslClientSite("/demo/conf/ssl-client-site.xml");
 
         // 初始化
         return $.kerberos.init(kerberosConnConfiguration, confSite);
@@ -52,7 +52,7 @@ public class KafkaTest {
     public static $Kafka initKafka() throws Exception {
         $KafkaConnConfiguration kafkaConnConfiguration = new $KafkaConnConfiguration();
 
-        kafkaConnConfiguration.setIp("slave08");
+        kafkaConnConfiguration.setIp("demo-kafka-host");
 
         return $.kafka.init(kafkaConnConfiguration);
     }

@@ -1,13 +1,13 @@
-import com.ailbb.act.$;
 import com.ailbb.act.entity.$KerberosConnConfiguration;
 import com.ailbb.act.kerberos.$Kerberos;
 import org.apache.hadoop.fs.FileStatus;
-import org.junit.Test;
-import sun.security.krb5.KrbException;
+import org.apache.kerby.kerberos.kerb.KrbException;
 
-import java.io.*;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /*
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class KerBerosTest {
     public void testKrb5() throws Exception {
-        String var1 = "/D:/Program%20Files/Apache/Maven/apache-maven-3.6.3/repository/com/ailbb/act/1.0-SNAPSHOT/act-1.0-SNAPSHOT.jar!/kerberos/krb5.conf";
+        String var1 = "/demo/path/to/config/krb5.conf";
         ArrayList var2 = new ArrayList();
 
         BufferedReader var3 = new BufferedReader(new InputStreamReader(new FileInputStream(new File(var1))));
@@ -74,19 +74,19 @@ public class KerBerosTest {
     }
 
     public static void doTest() throws Exception {
-        java.lang.System.setProperty("java.security.krb5.conf",  "/etc/krb5.conf");
+        java.lang.System.setProperty("java.security.krb5.conf",  "/demo/conf/krb5.conf");
         org.apache.hadoop.conf.Configuration hconf = new org.apache.hadoop.conf.Configuration();
         hconf.set("hadoop.security.authentication", "kerberos");
-        hconf.addResource(new org.apache.hadoop.fs.Path("/etc/hadoop/mapred-site.xml"));
-        hconf.addResource(new org.apache.hadoop.fs.Path("/etc/hadoopyarn-site.xml"));
-        hconf.addResource(new org.apache.hadoop.fs.Path("/etc/hadoop/conf/core-site.xml"));
-        hconf.addResource(new org.apache.hadoop.fs.Path("/etc/hadoop/conf/hdfs-site.xml"));
-        hconf.addResource(new org.apache.hadoop.fs.Path("/etc/hbase/conf/hbase-site.xml"));
-        hconf.addResource(new org.apache.hadoop.fs.Path("/etc/hadoop/conf/yarn-site.xml"));
-        hconf.addResource(new org.apache.hadoop.fs.Path("/etc/hive/conf/hive-site.xml"));
+        hconf.addResource(new org.apache.hadoop.fs.Path("/demo/conf/mapred-site.xml"));
+        hconf.addResource(new org.apache.hadoop.fs.Path("/demo/conf/yarn-site.xml"));
+        hconf.addResource(new org.apache.hadoop.fs.Path("/demo/conf/core-site.xml"));
+        hconf.addResource(new org.apache.hadoop.fs.Path("/demo/conf/hdfs-site.xml"));
+        hconf.addResource(new org.apache.hadoop.fs.Path("/demo/conf/hbase-site.xml"));
+        hconf.addResource(new org.apache.hadoop.fs.Path("/demo/conf/yarn-site.xml"));
+        hconf.addResource(new org.apache.hadoop.fs.Path("/demo/conf/hive-site.xml"));
 
         org.apache.hadoop.security.UserGroupInformation.setConfiguration(hconf);
-        org.apache.hadoop.security.UserGroupInformation.loginUserFromKeytabAndReturnUGI("hive/db", "/broadtech/share/keytab/hive_db.keytab")
+        org.apache.hadoop.security.UserGroupInformation.loginUserFromKeytabAndReturnUGI("hive/demo@DEMO_REALM", "/demo/share/keytab/demo.keytab")
                 .doAs(new java.security.PrivilegedExceptionAction() {
                     @Override
                     public Object run() throws Exception {
@@ -100,11 +100,11 @@ public class KerBerosTest {
                             System.out.println("=========开始执行impala刷新========== ");
 
                             java.lang.Class.forName("com.cloudera.impala.jdbc41.Driver");
-                            java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:impala://192.168.2.138:21050/default;AuthMech=1;KrbHostFQDN=slave31;KrbServiceName=impala", "", "");
+                            java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:impala://192.168.1.100:21050/default;AuthMech=1;KrbHostFQDN=demo-host-31;KrbServiceName=impala", "", "");
                             java.sql.Statement stat = conn.createStatement();
 
                             try {
-                                stat.executeUpdate("refresh prestat_test.st_app_hour ");
+                                stat.executeUpdate("refresh demo_db.demo_table ");
                                 System.out.println("成功: ");
                             } finally {
                                 // db.close();

@@ -1,9 +1,8 @@
 import com.ailbb.act.$;
 import com.ailbb.act.cmf.$CMF;
-import com.ailbb.act.hbase.$HBase;
 import com.ailbb.ajj.entity.$ConnConfiguration;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /*
  * Created by Wz on 9/10/2018.
@@ -17,8 +16,8 @@ public class CmfTest {
         $ConnConfiguration connConfiguration = new $ConnConfiguration();
         connConfiguration.setIp("127.0.0.1")
                 .setPort($.cmf.$PORT)
-                .setUsername("root")
-                .setPassword("123456")
+                .setUsername("demo_user")
+                .setPassword("demo_password")
         ;
 
         return $.cmf.init(connConfiguration);

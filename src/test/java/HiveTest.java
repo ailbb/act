@@ -2,7 +2,7 @@ import com.ailbb.act.$;
 import com.ailbb.act.hive.$Hive;
 import com.ailbb.ajj.entity.$JDBCConnConfiguration;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /*
  * Created by Wz on 9/10/2018.
@@ -17,7 +17,7 @@ public class HiveTest {
         $JDBCConnConfiguration jdbcConnConfiguration = new $JDBCConnConfiguration();
 
         jdbcConnConfiguration
-                .setUrl("jdbc:hive2://slave01:10000/default;principal=hive/slave01@CLOUDERA")
+                .setUrl("jdbc:hive2://demo-host:10000/default;principal=hive/demo-host@DEMO_REALM")
                 .setDriver($.hive.$DRIVER)
                 .setPort($.hive.$PORT)
         ;
@@ -31,7 +31,7 @@ public class HiveTest {
         jdbcConnConfiguration
                 .setDriver($.hive.$DRIVER)
                 .setDatabase("default")
-                .setIp("slave01")
+                .setIp("demo-host")
                 .setPort($.hive.$PORT)
         ;
 
